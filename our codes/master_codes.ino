@@ -147,13 +147,13 @@ void startListening() {
     if (RPIcommand[0] == 'w') {
       consecForwardcounter++;
       moveForward(DistNum);
-        if(consecForwardcounter>= forwardThreshold && SharpIR4.distance()<=10&&SharpIR5.distance()<=10){
+      if(consecForwardcounter>= forwardThreshold && sensorfour(false)<=10&&sensorfive(false)<=10){
           wallAlign();
           consecForwardcounter =0;
-        }
-        if (SharpIR2.distance()<=9&&SharpIR3.distance()<=9) {
-            alignFront();
-         }
+      }
+      if (sensortwo(false)<=9&&sensorthree(false)<=9) {
+        alignFront(&sensortwo, &sensorthree);
+      }
 
       lastRPIcommand = 'w';
       done();
@@ -164,9 +164,9 @@ void startListening() {
       hori_counter += 10;
       if (checkLeftAlign()) {
         wallAlign();
-       }
+      }
       if (checkFrontAlign()) {
-          alignFront();
+        alignFront(&sensortwo, &sensorthree);
       }
       rotateRight(DistNum);
       vert_counter = 0;
@@ -264,10 +264,10 @@ void done() {
 void frontAlignFastestPath(){
   float near;
   float aligned;
-  float diff = SharpIR2.distance() - SharpIR3.distance();
+  float diff = sensortwo(true) - sensorthree(true);
   if(diff>0){
       while(1){
-      aligned = SharpIR2.distance() - SharpIR3.distance();
+      aligned = sensortwo(true) - sensorthree(true);
       if(aligned<=0.5){
         break;
       }
@@ -277,14 +277,11 @@ void frontAlignFastestPath(){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
-
-
     }
   }
   else if(diff<0){
-
-      while(1){
-      aligned = SharpIR2.distance() - SharpIR3.distance();
+    while(1){
+      aligned = sensortwo(true) - sensorthree(true);
       if(aligned>=-0.5){
         break;
       }  
@@ -293,66 +290,64 @@ void frontAlignFastestPath(){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
-
-
     }
   }
 
-  if((SharpIR2.distance() + SharpIR3.distance()/2)<=8){
-  
-      if((SharpIR2.distance() + SharpIR3.distance()/2)<=4.5){
-          while(1){
-          moveBackward(99);  
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near>=5){
-            break;
-          }
-         }
-        }else if((SharpIR2.distance() + SharpIR3.distance()/2)>=5.5){
-          while(1){
-          moveForward(99);
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near<=5){
-            break;
-          }
-        }
-       }
-  }else if(((SharpIR2.distance() + SharpIR3.distance()/2)>=9)&&((SharpIR2.distance() + SharpIR3.distance()/2)<=18)){
-          if((SharpIR2.distance() + SharpIR3.distance()/2)<=14.5){
-          while(1){
-          moveBackward(99);  
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near>=15){
-            break;
-          }
-         }
-        }else if((SharpIR2.distance() + SharpIR3.distance()/2)>=15.5){
-          while(1){
-          moveForward(99);
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near<=15){
-            break;
-          }
-        }
-       }
-  }else if(((SharpIR2.distance() + SharpIR3.distance()/2)>=19)&&((SharpIR2.distance() + SharpIR3.distance()/2)<=29)){
-          if((SharpIR2.distance() + SharpIR3.distance()/2)<=24.5){
-          while(1){
-          moveBackward(99);  
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near>=25){
-            break;
-          }
-         }
-        }else if((SharpIR2.distance() + SharpIR3.distance()/2)>=25.5){
-          while(1){
-          moveForward(99);
-          near = ((SharpIR2.distance() + SharpIR3.distance())/2);
-          if(near<=25){
-            break;
-          }
+  float average = (sensortwo(true) + sensorthree(true))/2;
+  if(average)<=8){
+    if(average<=4.5){
+      while(1){
+        moveBackward(99);  
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near>=5){
+          break;
         }
       }
+    }else if(average>=5.5){
+      while(1){
+        moveForward(99);
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near<=5){
+          break;
+        }
+      }
+    }
+  }else if((average>=9)&&(average<=18)){
+    if(average<=14.5){
+      while(1){
+        moveBackward(99);  
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near>=15){
+          break;
+        }
+      }
+    }else if(average>=15.5){
+      while(1){
+        moveForward(99);
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near<=15){
+          break;
+        }
+      }
+    }
+  }else if((average>=19)&&(average<=29)){
+    if(average<=24.5){
+      while(1){
+        moveBackward(99);  
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near>=25){
+          break;
+        }
+      }
+    }else if(average>=25.5){
+      while(1){
+        moveForward(99);
+        near = ((sensortwo(true) + sensorthree(true))/2);
+        if(near<=25){
+          break;
+        }
+      }
+    }
   }
 }
 //TODO-IMPLEMENT 2x2 ALIGN. REQUIRES KEEPING TRACK OF PREV BLOCKS. REQUIRES 2 OUT OF 3 SENSORS. REMOVE FORWARD THRESHOLD
@@ -360,14 +355,14 @@ void frontAlignFastestPath(){
 boolean checkLeftAlign() {
     
     if (orientation % 2 == 0) {     //facing north or south
-        if (hori_counter > alignThreshold && SharpIR4.distance()<=10&&SharpIR5.distance()<=10) {
+        if (hori_counter > alignThreshold && sensorfour(false)<=10&&sensorfive(false)<=10) {
             return true;
         } else { 
             hori_counter++;         
             return false;
         }
     } else {
-        if (vert_counter > alignThreshold && SharpIR4.distance()<=10&&SharpIR5.distance()<=10) {
+        if (vert_counter > alignThreshold && sensorfour(false)<=10&&sensorfive(false)<=10) {
             return true;
         } else { 
             vert_counter++;         
@@ -378,14 +373,14 @@ boolean checkLeftAlign() {
 
 boolean checkFrontAlign() {
     if (orientation % 2 == 0) {     //facing north or south
-        if (vert_counter > alignThreshold && SharpIR2.distance()<=10&&SharpIR3.distance()<=10) {
+        if (vert_counter > alignThreshold && sensortwo(false)<=10&& sensorthree(false)<=10) {
             return true;
         } else { 
             vert_counter++;         
             return false;
         }
     } else {
-        if (hori_counter > alignThreshold &&SharpIR2.distance()<=10&&SharpIR3.distance()<=10) {
+        if (hori_counter > alignThreshold && sensortwo(false)<=10&& sensorthree(false)<=10) {
             return true;
         } else { 
             hori_counter++;         
@@ -397,11 +392,11 @@ boolean checkFrontAlign() {
 void alignLeft(){
    float rotate;
    float alignedl;
-    rotate = SharpIR5.distance() - SharpIR4.distance();
+    rotate = sensorfive(true) - sensorfour(true);
     //rotate clockwise
     if(rotate>0){
       while(1){
-      alignedl = SharpIR5.distance() - SharpIR4.distance();
+      alignedl = sensorfive(true) - sensorfour(true);
       if(alignedl<=0.4){
         break;
       }  
@@ -410,7 +405,7 @@ void alignLeft(){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
-      if(SharpIR5.distance()>10||SharpIR4.distance()>10){
+      if(sensorfive(true)>10||sensorfour(true)>10){
          break;
       }
 
@@ -420,7 +415,7 @@ void alignLeft(){
   else if(rotate<0){
 
       while(1){
-      alignedl = SharpIR5.distance() - SharpIR4.distance();
+      alignedl = sensorfive(true) - sensorfour(true);
       if(alignedl>=-0.4){
         break;
         }  
@@ -429,7 +424,7 @@ void alignLeft(){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
-      if(SharpIR5.distance()>10||SharpIR4.distance()>10){
+      if(sensorfive(true)>10||sensorfour(true)>10){
          break;
       }
       }
@@ -437,7 +432,7 @@ void alignLeft(){
     
 }
 
-void alignFront(void (*left)(),void (*right)()){
+void alignFront(void (*left)(boolean),void (*right)(boolean)){
     //BUG! DOING LEFT ALIGN RESETS BOTH COUNTERS IN THIS IMPLEMENTATION
   if (orientation % 2 == 0) {     //facing north or south
       vert_counter = 0;
@@ -446,11 +441,11 @@ void alignFront(void (*left)(),void (*right)()){
   }
   float near;
   float aligned;
-  float  diff = left() - right();
-  //float  diff = SharpIR2.distance() - SharpIR3.distance();
+  float diff = left(false) - right(false);
+  //rotation
   if(diff>0){
       while(1){
-      aligned = SharpIR2.distance() - SharpIR3.distance();
+      aligned = left(false) - right(false);
       if(aligned<=0.5){
         break;
       }
@@ -460,17 +455,16 @@ void alignFront(void (*left)(),void (*right)()){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
-      if(SharpIR2.distance()>10||SharpIR3.distance()>10){
+      
+      if(left(true)>10||right(true)>10){
          break;
       }
-
-
     }
   }
   else if(diff<0){
 
       while(1){
-      aligned = SharpIR2.distance() - SharpIR3.distance();
+      aligned = left(false) - right(false);
       if(aligned>=-0.5){
         break;
       }  
@@ -480,30 +474,34 @@ void alignFront(void (*left)(),void (*right)()){
       md.setBrakes(400, 400);
       delay(5);
 
-      if(SharpIR2.distance()>10||SharpIR3.distance()>10){
+      if(left(true)>10||right(true)>10){
          break;
       }
 
     }
   }
-
-    if((SharpIR2.distance() + SharpIR3.distance()/2)<=4.5){
-      while(1){
+  //displacement
+  float average = (left(false) + right(false))/2;
+  if(average<=4.5){
+    while(1){
       moveBackward(99);  
-      near = ((SharpIR2.distance() + SharpIR3.distance())/2);
+      near = (left(true) + right(true))/2);
       if(near>=5){
         break;
       }
-     }
-    }else if((SharpIR2.distance() + SharpIR3.distance()/2)>=5.5){
+    }
+  }else if(average>=5.5){
       while(1){
       moveForward(99);
-      near = ((SharpIR2.distance() + SharpIR3.distance())/2);
+      near = (left(true) + right(true))/2);
       if(near<=5){
         break;
       }
     }
-   }
+  }
+   
+  //get new raw sensors readings
+  resetSensorsReadings();
 }
 
 void wallAlign(){
@@ -514,9 +512,9 @@ void wallAlign(){
     }
 
   rotateLeft(2);
-  alignFront();
+  alignFront(&sensortwo, &sensorthree);
   rotateRight(2);
-  alignLeft();
+  //alignLeft();        //removed as we are implementing 2-block alignment. If keeping, we have to check sensors are ok before alignment
 
   //take note of displacement after this alignment 
 
@@ -535,7 +533,7 @@ void resetSensorsReadings() {
 
 float sensorone(boolean useRaw){
   #if less than 0, it means get new sensor reading. 
-  if (prevIR1reading<0) {
+  if (useRaw || prevIR1reading<0) {
       prevIR1reading = SharpIR1.distance() + 0.5;
   }
   
@@ -544,7 +542,7 @@ float sensorone(boolean useRaw){
 
 float sensortwo(boolean useRaw){
   #if less than 0, it means get new sensor reading. 
-  if (prevIR2reading<0) {
+  if (useRaw || prevIR2reading<0) {
       prevIR2reading = SharpIR2.distance() - 0.5;
   }
   
@@ -553,7 +551,7 @@ float sensortwo(boolean useRaw){
 
 float sensorthree(boolean useRaw){
   #if less than 0, it means get new sensor reading. 
-  if (prevIR3reading<0) {
+  if (useRaw || prevIR3reading<0) {
       prevIR3reading = SharpIR3.distance() - 0.3;
   }
   
@@ -562,7 +560,7 @@ float sensorthree(boolean useRaw){
 
 float sensorfour(boolean useRaw){
   #if less than 0, it means get new sensor reading. 
-  if (prevIR4reading<0) {
+  if (useRaw || prevIR4reading<0) {
       prevIR4reading = SharpIR4.distance() - 0.3;
   }
   
@@ -571,7 +569,7 @@ float sensorfour(boolean useRaw){
 
 float sensorfive(boolean useRaw){
   #if less than 0, it means get new sensor reading. 
-  if (prevIR5reading<0) {
+  if (useRaw || prevIR5reading<0) {
       prevIR5reading = SharpIR5.distance() + 0.2;
   }
   
@@ -595,7 +593,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTL = SharpIR5.distance(); // this returns the distance for Left Top Left
+    disLTL = sensorfive(false); // this returns the distance for Left Top Left
     blkLTL = leftCal(disLTL);
   } else {
     disLTL = -1;
@@ -603,7 +601,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTR = SharpIR4.distance(); // this returns the distance for Left Top Right
+    disLTR = sensorfour(false); // this returns the distance for Left Top Right
     blkLTR = leftCal(disLTR);
   } else {
     disLTR = -1;
@@ -611,7 +609,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFR = SharpIR3.distance(); // this returns the distance for Front Right
+    disFR = sensorthree(false); // this returns the distance for Front Right
     blkFR = frontCal(disFR);
   } else {
     blkFR = -1;
@@ -619,7 +617,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFL = SharpIR2.distance(); // this returns the distance for Front Left
+    disFL = sensortwo(false); // this returns the distance for Front Left
     blkFL = frontCal(disFL);
   } else {
     disFL = -1;
@@ -627,7 +625,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFM = SharpIR1.distance(); // this returns the distance for Front Middle
+    disFM = sensorone(false); // this returns the distance for Front Middle
     blkFM = frontMidCal(disFM);
   } else {
     disFM = -1;
@@ -891,6 +889,9 @@ void moveForward(int blockstomove) {
 //    Serial.print("M2Speed: ");
 //    Serial.println(M2speed);
   }
+  
+  //get new raw sensors readings
+  resetSensorsReadings();
 }
 
 
@@ -1003,6 +1004,9 @@ void moveBackward(int blockstomove) {
     }
     PIDController(2);
   }
+  
+  //get new raw sensors readings
+  resetSensorsReadings();
 }
 void rotateLeft(int degreetomove) {
   orientation = orientation + 3 % 4;
@@ -1038,6 +1042,9 @@ void rotateLeft(int degreetomove) {
     }
     PIDController(3);
   }
+  
+  //get new raw sensors readings
+  resetSensorsReadings();
 }
 
 void rotateRight(int degreetomove) {
@@ -1072,6 +1079,10 @@ void rotateRight(int degreetomove) {
     }
     PIDController(4);
   }
+  
+  //get new raw sensors readings
+  resetSensorsReadings();
+  
 }
 
 void E1() {
