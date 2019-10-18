@@ -83,6 +83,7 @@ PID myPIDleft(&Inputl, &Outputl, &Setpointl, Kp2, Ki2, Kd2,DIRECT);
 int orientation = 0;
 int vert_counter = 0;       
 int hori_counter = 0;
+int consecForwardcounter = 0;
 
 /* Used to reduce sensors reading*/
 float prevIR1reading = -1;
@@ -91,11 +92,8 @@ float prevIR3reading = -1;
 float prevIR4reading = -1;
 float prevIR5reading = -1;
 
-//used to keep track of left blocks
-boolean middleLeftisBlock = false;
-
 /* ================================ SETTINGS ======================================*/
-int alignThreshold = 5;     //4
+int alignThreshold = 6;     //4
 int forwardThreshold = 5;   //threshold for wallAlign only, increment only if going forward. reset when alignment done
 
 /* ================================ SETUP() AND LOOP() ======================================*/
@@ -147,23 +145,32 @@ void startListening() {
     RPIcommand = readStr();
     DistNum = RPIcommand.substring(1).toInt();
     if (RPIcommand[0] == 'w') {
-      
+      consecForwardcounter++;
       moveForward(DistNum);
-      
-      checkLeftAlign();
-      checkFrontAlign();
+      if(consecForwardcounter>= forwardThreshold && sensorfour(false)<=10&&sensorfive(false)<=10){
+          wallAlign();
+          consecForwardcounter =0;
+      }
+      if (sensortwo(false)<=9&&sensorthree(false)<=9) {
+        alignFront(&sensortwo, &sensorthree);
+      }
 
       lastRPIcommand = 'w';
       done();
     }
     if (RPIcommand[0] == 'd') {
-      vert_counter += alignThreshold;       //this is to fix double align
-      hori_counter += alignThreshold;
-      
-      checkLeftAlign();
-      checkFrontAlign();
-      
+      consecForwardcounter = 0;
+      vert_counter += 10;
+      hori_counter += 10;
+      if (checkLeftAlign()) {
+        wallAlign();
+      }
+      if (checkFrontAlign()) {
+        alignFront(&sensortwo, &sensorthree);
+      }
       rotateRight(DistNum);
+      vert_counter = 0;
+      hori_counter = 0;
 
       lastRPIcommand = 'd';
       done();
@@ -176,11 +183,9 @@ void startListening() {
       
     }
     if (RPIcommand[0] == 'a') {
-      vert_counter += alignThreshold;       //this is to fix double align
-      hori_counter += alignThreshold;
-      
-      checkFrontAlign();
-      
+      consecForwardcounter = 0;
+      vert_counter++;
+      hori_counter++;
       rotateLeft(DistNum);
 
       lastRPIcommand = 'a';
@@ -346,89 +351,41 @@ void frontAlignFastestPath(){
   }
 }
 //TODO-IMPLEMENT 2x2 ALIGN. REQUIRES KEEPING TRACK OF PREV BLOCKS. REQUIRES 2 OUT OF 3 SENSORS. REMOVE FORWARD THRESHOLD
-//REWRITE CHECK FRONT CHECK LEFT ALIGN
 
-void checkLeftAlign() {
-    boolean align;
+boolean checkLeftAlign() {
     
     if (orientation % 2 == 0) {     //facing north or south
-        if (hori_counter > alignThreshold) {
-            align = true;
+        if (hori_counter > alignThreshold && sensorfour(false)<=10&&sensorfive(false)<=10) {
+            return true;
         } else { 
             hori_counter++;         
-            align = false;
+            return false;
         }
     } else {
-        if (vert_counter > alignThreshold) {
-            align = true;
+        if (vert_counter > alignThreshold && sensorfour(false)<=10&&sensorfive(false)<=10) {
+            return true;
         } else { 
             vert_counter++;         
-            align = false;
+            return false;
         }
-    }
-    //check left left and left right, 5 and 4
-    if (align && sensorfive(false)<=10 && sensorfour(false)<=10) {
-        wallAlign(&sensortwo, &sensorthree);                    //left and right
-        resetLeftAlignCounter();
-    }
-    else if (align && lastRPIcommand == 'w'  && middleLeftisBlock && sensorfour(false)<=10) {       //2by2 align
-        wallAlign(&sensorone, &sensorthree);                    //mid and right
-        resetLeftAlignCounter();
-    }
-    
-    
-    //code to keep track of left blocks
-    if (sensorfour(false)<=10) {
-        middleLeftisBlock = true;
-    } else {
-        middleLeftisBlock = false;
     }
 }
 
-void checkFrontAlign() {
-    boolean align;
-    
+boolean checkFrontAlign() {
     if (orientation % 2 == 0) {     //facing north or south
-        if (vert_counter > alignThreshold) {
-            align = true;
+        if (vert_counter > alignThreshold && sensortwo(false)<=10&& sensorthree(false)<=10) {
+            return true;
         } else { 
             vert_counter++;         
-            align = false;
+            return false;
         }
     } else {
-        if (hori_counter > alignThreshold) {
-            align = true;
+        if (hori_counter > alignThreshold && sensortwo(false)<=10&& sensorthree(false)<=10) {
+            return true;
         } else { 
             hori_counter++;         
-            align = false;
+            return false;
         }
-    }
-    //check left and right, 2 and 3
-    if (align && sensortwo(false)<=10&& sensorthree(false)<=10) {
-        alignFront(&sensortwo, &sensorthree);
-        resetFrontAlignCounter();
-    } else if (align && sensortwo(false)<=10&& sensorone(false)<=10) {      //check left and mid, 2 and 1
-        alignFront(&sensortwo, &sensorone);                                 //order matters
-        resetFrontAlignCounter();
-    } else if align && sensorone(false)<=10&& sensorthree(false)<=10) {      //check mid and right, 1 and 3
-        alignFront(&sensorone, &sensorthree);
-        resetFrontAlignCounter();
-    }
-}
-
-void resetFrontAlignCounter() {
-  if (orientation % 2 == 0) {     //facing north or south
-      vert_counter = 0;
-  } else {
-      hori_counter = 0;
-  }
-}
-
-void resetLeftAlignCounter() {
-    if (orientation % 2 == 0) {     //facing north or south
-        hori_counter = 0;
-    } else {
-        vert_counter = 0;
     }
 }
 
@@ -476,6 +433,12 @@ void alignLeft(){
 }
 
 void alignFront(void (*left)(boolean),void (*right)(boolean)){
+    //BUG! DOING LEFT ALIGN RESETS BOTH COUNTERS IN THIS IMPLEMENTATION
+  if (orientation % 2 == 0) {     //facing north or south
+      vert_counter = 0;
+  } else {
+      hori_counter = 0;
+  }
   float near;
   float aligned;
   float diff = left(false) - right(false);
@@ -541,11 +504,15 @@ void alignFront(void (*left)(boolean),void (*right)(boolean)){
   resetSensorsReadings();
 }
 
-void wallAlign(void (*left)(boolean),void (*right)(boolean)){
-  resetLeftAlignCounter();
+void wallAlign(){
+    if (orientation % 2 == 0) {     //facing north or south
+        hori_counter = 0;
+    } else {
+        vert_counter = 0;
+    }
 
   rotateLeft(2);
-  alignFront(left, right);
+  alignFront(&sensortwo, &sensorthree);
   rotateRight(2);
   //alignLeft();        //removed as we are implementing 2-block alignment. If keeping, we have to check sensors are ok before alignment
 
