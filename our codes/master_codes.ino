@@ -20,6 +20,17 @@
 #define sensor5 5 
 #define sensor6 6
 
+/*  Table of contents:
+    1. INITIALISATION
+    2. SETTINGS
+    3. SETUP & LOOP
+    4. MAIN FUNCTIONS
+    5. ALIGNMENT
+    6. SENSORS
+    7. MOVEMENT
+    
+*/
+
 /* ========================= INITIALISATION =======================================*/
 
 SharpIR SharpIR1(IR1, sensor1);
@@ -73,6 +84,13 @@ int orientation = 0;
 int vert_counter = 0;       
 int hori_counter = 0;
 int consecForwardcounter = 0;
+
+/* Used to reduce sensors reading*/
+float prevIR1reading = -1;
+float prevIR2reading = -1;
+float prevIR3reading = -1;
+float prevIR4reading = -1;
+float prevIR5reading = -1;
 
 /* ================================ SETTINGS ======================================*/
 int alignThreshold = 6;     //4
@@ -237,12 +255,16 @@ String readStr() {
   }
 }
 
+void done() {
+  Serial.println("done");
+}
+
 /* ================================ ALIGNMENT ====================================== */
 
 void frontAlignFastestPath(){
   float near;
   float aligned;
-  float  diff = SharpIR2.distance() - SharpIR3.distance();
+  float diff = SharpIR2.distance() - SharpIR3.distance();
   if(diff>0){
       while(1){
       aligned = SharpIR2.distance() - SharpIR3.distance();
@@ -333,7 +355,7 @@ void frontAlignFastestPath(){
       }
   }
 }
-
+//TODO-IMPLEMENT 2x2 ALIGN. REQUIRES KEEPING TRACK OF PREV BLOCKS. REQUIRES 2 OUT OF 3 SENSORS. REMOVE FORWARD THRESHOLD
 
 boolean checkLeftAlign() {
     
@@ -376,6 +398,7 @@ void alignLeft(){
    float rotate;
    float alignedl;
     rotate = SharpIR5.distance() - SharpIR4.distance();
+    //rotate clockwise
     if(rotate>0){
       while(1){
       alignedl = SharpIR5.distance() - SharpIR4.distance();
@@ -393,6 +416,7 @@ void alignLeft(){
 
     }
   }
+  //rotate anti-clockwise
   else if(rotate<0){
 
       while(1){
@@ -413,7 +437,8 @@ void alignLeft(){
     
 }
 
-void alignFront(){
+void alignFront(void (*left)(),void (*right)()){
+    //BUG! DOING LEFT ALIGN RESETS BOTH COUNTERS IN THIS IMPLEMENTATION
   if (orientation % 2 == 0) {     //facing north or south
       vert_counter = 0;
   } else {
@@ -421,7 +446,8 @@ void alignFront(){
   }
   float near;
   float aligned;
-  float  diff = SharpIR2.distance() - SharpIR3.distance();
+  float  diff = left() - right();
+  //float  diff = SharpIR2.distance() - SharpIR3.distance();
   if(diff>0){
       while(1){
       aligned = SharpIR2.distance() - SharpIR3.distance();
@@ -486,7 +512,7 @@ void wallAlign(){
     } else {
         vert_counter = 0;
     }
-//  alignLeft();
+
   rotateLeft(2);
   alignFront();
   rotateRight(2);
@@ -498,27 +524,59 @@ void wallAlign(){
 }
 
 /* ================================ SENSORS ====================================== */
+void resetSensorsReadings() {
+    #signals that sensors should get raw readings next time.
+    prevIR1reading = -1;
+    prevIR2reading = -1;
+    prevIR3reading = -1;
+    prevIR4reading = -1;
+    prevIR5reading = -1;
+}
 
+float sensorone(boolean useRaw){
+  #if less than 0, it means get new sensor reading. 
+  if (prevIR1reading<0) {
+      prevIR1reading = SharpIR1.distance() + 0.5;
+  }
+  
+  return prevIR1reading;
+}
 
-//int sensorone(){
-//  return SharpIR1.distance() +0.5;
-//}
-//
-//int sensortwo(){
-//  return SharpIR2.distance() -0.5;
-//}
-//
-//int sensorthree(){
-//  return SharpIR3.distance() -0.3;
-//}
-//
-//int sensorfour(){
-//  return SharpIR4.distance() -0.3;
-//}
-//
-//int sensorfive(){
-//  return SharpIR5.distance() + 0.2;
-//}
+float sensortwo(boolean useRaw){
+  #if less than 0, it means get new sensor reading. 
+  if (prevIR2reading<0) {
+      prevIR2reading = SharpIR2.distance() - 0.5;
+  }
+  
+  return prevIR2reading;
+}
+
+float sensorthree(boolean useRaw){
+  #if less than 0, it means get new sensor reading. 
+  if (prevIR3reading<0) {
+      prevIR3reading = SharpIR3.distance() - 0.3;
+  }
+  
+  return prevIR3reading;
+}
+
+float sensorfour(boolean useRaw){
+  #if less than 0, it means get new sensor reading. 
+  if (prevIR4reading<0) {
+      prevIR4reading = SharpIR4.distance() - 0.3;
+  }
+  
+  return prevIR4reading;
+}
+
+float sensorfive(boolean useRaw){
+  #if less than 0, it means get new sensor reading. 
+  if (prevIR5reading<0) {
+      prevIR5reading = SharpIR5.distance() + 0.2;
+  }
+  
+  return prevIR5reading;
+}
 
 void sensorReading(long Sensor) {
   String rawDistance = "";
@@ -1038,7 +1096,5 @@ void initializeMotor_Start() {
   md.setBrakes(0, 0);
 }
 
-void done() {
-  Serial.println("done");
-}
+
 
