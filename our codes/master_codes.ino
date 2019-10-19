@@ -133,8 +133,8 @@ void setup() {
 }
 
 void loop() {
-  //runTests()
-  startListening()
+  //runTests();
+  startListening();
 }
 
 /* ================================ MAIN FUNCTIONS ======================================*/
