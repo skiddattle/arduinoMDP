@@ -370,7 +370,7 @@ void checkLeftAlign() {
         wallAlign(&sensortwo, &sensorthree);                    //left and right
         resetLeftAlignCounter();
     }
-    else if (align && lastRPIcommand == 'w'  && middleLeftisBlock && sensorfour(false)<=10) {       //2by2 align
+    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(false)<=10) {       //2by2 align
         wallAlign(&sensorone, &sensorthree);                    //mid and right
         resetLeftAlignCounter();
     }
