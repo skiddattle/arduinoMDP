@@ -96,7 +96,7 @@ void moveForward(int blockstomove) {
       }
     case 99:
     {
-        tickstomove = 13;
+        tickstomove = 26;
         break;
   }
  }
@@ -220,7 +220,7 @@ void moveBackward(int blockstomove) {
       }
     case 99:
     {
-        tickstomove = 10;
+        tickstomove = 20;
         break;
   }
   }
@@ -262,6 +262,9 @@ void rotateLeft(int degreetomove) {
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees
   }
+  else if (degreetomove == 99) {
+    tickstomove = 5; //180 degrees
+  }
   double currentSpeed = ROTATE_MAX_SPEED;
   double offset = 0;
   if (tickstomove < 3)
@@ -286,6 +289,9 @@ void rotateRight(int degreetomove) {
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees
+  }
+  else if (degreetomove == 99) {
+    tickstomove = 5; //180 degrees
   }
   double currentSpeed = ROTATE_MAX_SPEED;
   double offset = 0;

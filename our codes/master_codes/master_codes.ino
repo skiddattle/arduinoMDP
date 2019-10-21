@@ -145,11 +145,8 @@ void runTests() {
   vert_counter +=10;       
   hori_counter +=10;
 //  delay(2000);
-  delay(1000);
-  checkLeftAlign();
-  moveForward(1);
-  checkLeftAlign();
-  delay(1000);
+  delay(5000);
+  alignFront(&sensortwo,&sensorthree);
 
   
 //  delay(5000);

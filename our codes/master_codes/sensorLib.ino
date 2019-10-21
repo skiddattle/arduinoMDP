@@ -129,19 +129,19 @@ void alignLeft(){
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
-  float diff = left(false) - right(false);
-  //rotation
+  float diff;
+
   if(diff>0){
       while(1){
-      aligned = left(false) - right(false);
-      if(aligned<=0.5){
+      aligned = left(true) - right(true); //changed this from false to true
+      if(aligned<=0.4){
         break;
       }
-      
-      md.setSpeeds(-100,0);  
+      md.setBrakes(0, 0);
+      md.setSpeeds(-150,0);  
       delay(100);
       md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
+      md.setBrakes(400, 350);
       delay(5);
       
       if(left(true)>10||right(true)>10){
@@ -152,14 +152,15 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   else if(diff<0){
 
       while(1){
-      aligned = left(false) - right(false);
-      if(aligned>=-0.5){
+      aligned = left(true) - right(true);//changed this from false to true
+      if(aligned>=-0.4){
         break;
       }  
-      md.setSpeeds(0,-100);  
+      md.setBrakes(0, 0);
+      md.setSpeeds(0,-150);  
       delay(100);
       md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
+      md.setBrakes(400, 350);
       delay(5);
 
       if(left(true)>10||right(true)>10){
@@ -168,23 +169,25 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
 
     }
   }
-  //displacement
   float average = (left(false) + right(false))/2;
-  if(average<=4.5){
+  if(average<=4.6){
     while(1){
+       near = ((left(true) + right(true))/2);
+      if(near>=4.8){
+        break;
+      }
       moveBackward(99);  
-      near = ((left(true) + right(true))/2);
-      if(near>=5){
-        break;
-      }
+
+
     }
-  }else if(average>=5.5){
+  }else if(average>=5.4){
       while(1){
-      moveForward(99);
       near = ((left(true) + right(true))/2);
-      if(near<=5){
+      if(near<=5.2){
         break;
       }
+      moveForward(99);
+
     }
   }
    
@@ -227,7 +230,7 @@ float sensorone(boolean useRaw){
 float sensortwo(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR2reading<0) {
-      prevIR2reading = SharpIR2.distance();
+      prevIR2reading = SharpIR2.distance()-0.3;
   }
   
   return prevIR2reading;
@@ -341,8 +344,8 @@ void sensorReading(long Sensor) {
   blocks.concat(",");
   blocks.concat(blkR);
 
-//  Serial.println(rawDistance);
-  Serial.println(blocks);
+ // Serial.println(rawDistance);
+ Serial.println(blocks);
 
 }
 void rightSensorReading(){
