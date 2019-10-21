@@ -129,7 +129,7 @@ void alignLeft(){
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
-  float diff;
+  float diff = left(false) - right(false);
 
   if(diff>0){
       while(1){
@@ -137,11 +137,10 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       if(aligned<=0.4){
         break;
       }
-      md.setBrakes(0, 0);
-      md.setSpeeds(-150,0);  
+      md.setSpeeds(-100,0);  
       delay(100);
       md.setSpeeds(0, 0);
-      md.setBrakes(400, 350);
+      md.setBrakes(400, 400);
       delay(5);
       
       if(left(true)>10||right(true)>10){
@@ -156,11 +155,10 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       if(aligned>=-0.4){
         break;
       }  
-      md.setBrakes(0, 0);
-      md.setSpeeds(0,-150);  
+      md.setSpeeds(0,-100);  
       delay(100);
       md.setSpeeds(0, 0);
-      md.setBrakes(400, 350);
+      md.setBrakes(400, 400);
       delay(5);
 
       if(left(true)>10||right(true)>10){
@@ -230,7 +228,7 @@ float sensorone(boolean useRaw){
 float sensortwo(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR2reading<0) {
-      prevIR2reading = SharpIR2.distance()-0.3;
+      prevIR2reading = SharpIR2.distance();
   }
   
   return prevIR2reading;
