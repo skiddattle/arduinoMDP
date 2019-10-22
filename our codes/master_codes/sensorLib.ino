@@ -146,6 +146,11 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       delay(100);
       md.setSpeeds(0,0);
     }
+    else{
+      md.setSpeeds(0,0);
+      md.setBrakes(400,400);
+      break;
+    }
    }
   float average = (left(false) + right(false))/2;
   if(average<=4.6){
