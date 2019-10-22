@@ -127,26 +127,46 @@ void alignLeft(){
 }
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
-  float distL = left(true);
-  float distR = right(true);
-  int blkL = distL/10;
-  int blkR = distR/10;
-  float closeL = distL - blkL;
-  float closeR = distR - blkR;
-  float diff = closeL - closeR;
-  //rotation
-   while(1){
-    if(diff>0.4){
-      md.setSpeeds(-150*diff,0);  
+  float near;
+  float aligned;
+  float diff = left(false) - right(false);
+
+  if(diff>0){
+      while(1){
+      aligned = left(true) - right(true); //changed this from false to true
+      if(aligned<=0.4){
+        break;
+      }
+      md.setSpeeds(-100,0);  
       delay(100);
       md.setSpeeds(0, 0);
+      md.setBrakes(400, 400);
+      delay(5);
+      
+      if(left(true)>10||right(true)>10){
+         break;
+      }
     }
-    if(diff<-0.4){
-      md.setSpeeds(150*(-diff),0);
+  }
+  else if(diff<0){
+
+      while(1){
+      aligned = left(true) - right(true);//changed this from false to true
+      if(aligned>=-0.4){
+        break;
+      }  
+      md.setSpeeds(0,-100);  
       delay(100);
-      md.setSpeeds(0,0);
+      md.setSpeeds(0, 0);
+      md.setBrakes(400, 400);
+      delay(5);
+
+      if(left(true)>10||right(true)>10){
+         break;
+      }
+
     }
-   }
+  }
   float average = (left(false) + right(false))/2;
   if(average<=4.6){
     while(1){
