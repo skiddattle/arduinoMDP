@@ -63,8 +63,6 @@ boolean middleLeftisBlock = false;
 int alignThreshold = 5;     //4
 int forwardThreshold = 5;   //threshold for wallAlign only, increment only if going forward. reset when alignment done
 
-String RPIcommand;
-
 /* ================================ SETUP() AND LOOP() ======================================*/
 void setup() {
   Serial.begin(115200);
@@ -85,7 +83,7 @@ void loop() {
 
 void startListening() {
       
-//  String RPIcommand;
+  String RPIcommand;
   long int DistNum;
   while (Serial.available()) {
     RPIcommand = readStr();
@@ -124,7 +122,6 @@ void startListening() {
       hori_counter += alignThreshold;
       
       checkFrontAlign();
-      middleLeftisBlock = false;
       
       rotateLeft(DistNum);
 
@@ -141,14 +138,6 @@ void startListening() {
 
 
 void runTests() {
-//  RPIcommand = "w1";
-//  vert_counter +=10;       
-//  hori_counter +=10;
-//  delay(2000);
-//  delay(2000);
-//  alignFront(&sensortwo, &sensorone); 
-
-  
   delay(5000);
   int  test = 4;
   while(test>0){
@@ -156,7 +145,7 @@ void runTests() {
     delay(1500);
     test--;
   }
-  rotateRight(2);
+  rotateLeft(2);
   delay(1500);
   test = 4;
   while(test>0){
@@ -165,12 +154,19 @@ void runTests() {
     test--;
   }
   
-  rotateRight(2);
+  rotateLeft(2);
   test = 4;
   while(test>0){
     moveForward(1);//comment out
     delay(1500);
     test--;
+  }
+ 
+  delay(1000);
+  while(test<4){
+    moveBackward(1);
+    delay(1500);
+    test++;
   }
 }
 

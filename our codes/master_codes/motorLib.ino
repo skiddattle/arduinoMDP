@@ -44,56 +44,148 @@ void setupPID() {
 }
 //
 void moveForward(int blockstomove) {
+  double currentSpeed = 0;
+  currentSpeed = MOVE_MAX_SPEED;
   initializeTick();
   initializeMotor_Start();
   int tickstomove;
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 570;//275
-
+          tickstomove = 560;//275
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-5,currentSpeed);
+        }
         break;
       }
     case 2:
       {
         tickstomove = 1155;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-5,currentSpeed);
+        }
         break;
       }
     case 3:
       {
         tickstomove = 1760;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-6,currentSpeed);
+        }
         break;
       }
     case 4:
       {
         tickstomove = 2380;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-6,currentSpeed);
+        }
         break;
       }
     case 5:
       {
         tickstomove = 2985;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-7,currentSpeed);
+        }
         break;
       }
     case 6:
       {
         tickstomove = 3615;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-7,currentSpeed);
+        }
         break;
       }
     case 7:
       {
         tickstomove = 4195;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-8,currentSpeed);
+        }
         break;
       }
     case 8:
       {
         tickstomove = 4775;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-8,currentSpeed);
+        }
         break;
       }
     case 9:
       {
         tickstomove = 5370;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-9,currentSpeed);
+        }
         break;
       }
+    case 10: 
+    {
+        tickstomove = 5370;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-9,currentSpeed);
+        }
+        break;
+    }
+    case 11: 
+    {
+        tickstomove = 5930;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-10,currentSpeed);
+        }
+        break;
+    }
+    case 12: 
+    {
+        tickstomove = 6490;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-10,currentSpeed);
+        }
+        break;
+    }
+    case 13: 
+    {
+        tickstomove = 7050;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-11,currentSpeed);
+        }
+        break;
+    }
+    case 14: 
+    {
+        tickstomove = 7610;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-11,currentSpeed);
+        }
+        break;
+    }
+    case 15: 
+    {
+        tickstomove = 8170;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-12,currentSpeed);
+        }
+        break;
+    }
+    case 16: 
+    {
+        tickstomove = 8730;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-12,currentSpeed);
+        }
+        break;
+    }
+    case 17: 
+    {
+        tickstomove = 9290;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-13,currentSpeed);
+        }
+        break;
+    }
     case 99:
     {
         tickstomove = 26;
@@ -101,41 +193,6 @@ void moveForward(int blockstomove) {
   }
  }
 
-//  distance = cmToTicks(distance);
-//  double currentSpeed = 0;
-//  if (tickstomove < 60) {
-//    currentSpeed = MOVE_MIN_SPEED;
-//  } else {
-//    currentSpeed = MOVE_MAX_SPEED;
-//  }
-//  while (tick_R <= tickstomove || tick_L <= tickstomove) {
-//    md.setSpeeds(currentSpeed-16,currentSpeed);
-//
-//    
-//    
-//  }
-
-  double currentSpeed = 0;
-  if (tickstomove < 60) {
-    currentSpeed = MOVE_MIN_SPEED;
-  } else {
-    currentSpeed = MOVE_MAX_SPEED;
-  }
-  double offset = 0;
-  long last_tick_R = 0;
-  while (tick_R <= tickstomove || tick_L <= tickstomove) {
-    md.setSpeeds(currentSpeed-5,currentSpeed);
-//    if ((tick_R - last_tick_R) >= 10 || tick_R == 0 || tick_R == last_tick_R) {
-//      last_tick_R = tick_R;
-//      offset += 0.1;
-//    }
-//    if (myPID.Compute() || tick_R == last_tick_R) {
-//      if (offset >= 1)
-//        md.setSpeeds((currentSpeed + speed_O), (currentSpeed - speed_O));
-//      else
-//        md.setSpeeds((offset * (currentSpeed + speed_O)), (offset * (currentSpeed - speed_O)));
-//    }
-  }
 
   initializeMotor_End();
   resetSensorsReadings();
@@ -261,7 +318,7 @@ void rotateLeft(int degreetomove) {
     tickstomove = 105; //45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 779;//775 //90 degrees
+    tickstomove = 782;//775 //90 degrees
   }
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees
@@ -290,7 +347,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 777; //90 degrees
+    tickstomove = 772; //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees
