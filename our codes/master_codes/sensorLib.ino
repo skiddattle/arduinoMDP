@@ -129,12 +129,12 @@ void alignLeft(){
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
-  float diff = left(false) - right(false);
+  float diff = left(true) - right(true);
 
   if(diff>0){
       while(1){
-      aligned = left(true) - right(true); //changed this from false to true
-      if(aligned<=0.4){
+      aligned = left(false) - right(false); //changed this from false to true
+      if(aligned<=0.2){
         break;
       }
       md.setSpeeds(-100,0);  
@@ -142,8 +142,10 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
+
+      resetSensorsReadings();
       
-      if(left(true)>10||right(true)>10){
+      if(left(false)>10||right(false)>10){
          break;
       }
     }
@@ -151,8 +153,8 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   else if(diff<0){
 
       while(1){
-      aligned = left(true) - right(true);//changed this from false to true
-      if(aligned>=-0.4){
+      aligned = left(false) - right(false);//changed this from false to true
+      if(aligned>=-0.2){
         break;
       }  
       md.setSpeeds(0,-100);  
@@ -161,13 +163,15 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       md.setBrakes(400, 400);
       delay(5);
 
-      if(left(true)>10||right(true)>10){
+      resetSensorsReadings();
+      
+      if(left(false)>10||right(false)>10){
          break;
       }
 
     }
   }
-  float average = (left(false) + right(false))/2;
+  float average = (left(true) + right(true))/2;
   if(average<=4.6){
     while(1){
        near = ((left(true) + right(true))/2);
@@ -344,6 +348,7 @@ void sensorReading(long Sensor) {
 
  // Serial.println(rawDistance);
  Serial.println(blocks);
+
 
 }
 void rightSensorReading(){

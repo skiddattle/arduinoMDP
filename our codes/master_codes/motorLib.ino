@@ -50,7 +50,7 @@ void moveForward(int blockstomove) {
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 545;//275
+          tickstomove = 570;//275
 
         break;
       }
@@ -100,6 +100,7 @@ void moveForward(int blockstomove) {
         break;
   }
  }
+
 //  distance = cmToTicks(distance);
 //  double currentSpeed = 0;
 //  if (tickstomove < 60) {
@@ -123,19 +124,21 @@ void moveForward(int blockstomove) {
   double offset = 0;
   long last_tick_R = 0;
   while (tick_R <= tickstomove || tick_L <= tickstomove) {
-    if ((tick_R - last_tick_R) >= 10 || tick_R == 0 || tick_R == last_tick_R) {
-      last_tick_R = tick_R;
-      offset += 0.1;
-    }
-    if (myPID.Compute() || tick_R == last_tick_R) {
-      if (offset >= 1)
-        md.setSpeeds((currentSpeed + speed_O), (currentSpeed - speed_O));
-      else
-        md.setSpeeds((offset * (currentSpeed + speed_O)), (offset * (currentSpeed - speed_O)));
-    }
+    md.setSpeeds(currentSpeed-5,currentSpeed);
+//    if ((tick_R - last_tick_R) >= 10 || tick_R == 0 || tick_R == last_tick_R) {
+//      last_tick_R = tick_R;
+//      offset += 0.1;
+//    }
+//    if (myPID.Compute() || tick_R == last_tick_R) {
+//      if (offset >= 1)
+//        md.setSpeeds((currentSpeed + speed_O), (currentSpeed - speed_O));
+//      else
+//        md.setSpeeds((offset * (currentSpeed + speed_O)), (offset * (currentSpeed - speed_O)));
+//    }
   }
 
   initializeMotor_End();
+  resetSensorsReadings();
 }
 //
 void moveBackward(int blockstomove) {
@@ -245,6 +248,7 @@ void moveBackward(int blockstomove) {
     }
   }
   initializeMotor_End();
+  resetSensorsReadings();
 }
 //
 //
@@ -257,7 +261,7 @@ void rotateLeft(int degreetomove) {
     tickstomove = 105; //45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 775;//377 //90 degrees
+    tickstomove = 779;//775 //90 degrees
   }
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees
@@ -275,6 +279,7 @@ void rotateLeft(int degreetomove) {
       md.setSpeeds((currentSpeed + speed_O), -(currentSpeed - speed_O));
   }
   initializeMotor_End();
+  resetSensorsReadings();
 }
 
 void rotateRight(int degreetomove) {
@@ -285,7 +290,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 771; //90 degrees
+    tickstomove = 777; //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees
@@ -302,6 +307,7 @@ void rotateRight(int degreetomove) {
      md.setSpeeds(-(currentSpeed + speed_O), currentSpeed - speed_O);
   }
   initializeMotor_End();
+  resetSensorsReadings();
 }
 //
 //
