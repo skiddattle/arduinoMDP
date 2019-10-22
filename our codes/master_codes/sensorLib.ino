@@ -152,10 +152,10 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       break;
     }
    }
-  float average = (left(false) + right(false))/2;
+  float average = (closeL + closeR))/2;
   if(average<=4.6){
     while(1){
-       near = ((left(true) + right(true))/2);
+       near = (((left(true)-blkL) + (right(true)-blkR))/2);
       if(near>=4.8){
         break;
       }
@@ -165,7 +165,7 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
     }
   }else if(average>=5.4){
       while(1){
-      near = ((left(true) + right(true))/2);
+      near = (((left(true)-blkL) + (right(true)-blkR)/2);
       if(near<=5.2){
         break;
       }
