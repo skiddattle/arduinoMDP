@@ -64,18 +64,15 @@ void checkFrontAlign() {
     } else if (align && sensorone(false)<=10&& sensorthree(false)<=10) {      //check mid and right, 1 and 3
         alignFront(&sensorone, &sensorthree);
         resetFrontAlignCounter();
-    }
-    else{
-        if (align && sensortwo(false)<=30&& sensorthree(false)<=30) {
-        alignUnevenFront(&sensortwo, &sensorthree);
-        resetFrontAlignCounter();
-        } else if (align && sensortwo(false)<=30&& sensorone(false)<=30) {      //check left and mid, 2 and 1
-        alignUnevenFront(&sensortwo, &sensorone);                                 //order matters
-        resetFrontAlignCounter();
-        } else if (align && sensorone(false)<=30&& sensorthree(false)<=30) {      //check mid and right, 1 and 3
-        alignUnevenFront(&sensorone, &sensorthree);
-        resetFrontAlignCounter();
-    }
+    } else if (align && sensortwo(false)<=30&& sensorthree(false)<=30) {
+      alignUnevenFront(&sensortwo, &sensorthree);
+      resetFrontAlignCounter();
+    } else if (align && sensortwo(false)<=30&& sensorone(false)<=30) {      //check left and mid, 2 and 1
+      alignUnevenFront(&sensortwo, &sensorone);                                 //order matters
+      resetFrontAlignCounter();
+    } else if (align && sensorone(false)<=30&& sensorthree(false)<=30) {      //check mid and right, 1 and 3
+      alignUnevenFront(&sensorone, &sensorthree);
+      resetFrontAlignCounter();
     }
 }
 
@@ -215,46 +212,63 @@ void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
   float distR = right(true);
   int blkL = distL/10;
   int blkR = distR/10;
-  float closeL = distL - blkL;
-  float closeR = distR - blkR;
-  float diff = closeL - closeR;
+  float diff = (distL - (blkL*10)) - (distR - (blkR*10));
   //rotation
    while(1){
     if(diff>0.4){
-      md.setSpeeds(-150*diff,0);  
+      md.setSpeeds(-100*diff,0);  
       delay(100);
       md.setSpeeds(0, 0);
+      delay(50);
+      distL = left(true);
+      distR = right(true);
+      if ((distL - blkL*10)>10||(distR-blkR*10)>10){
+        md.setSpeeds(100*diff, 0);
+        delay(100);
+        md.setSpeeds(0,0);
+        delay(5);
+        break;
+      }
     }
-    if(diff<-0.4){
-      md.setSpeeds(150*(-diff),0);
+    else if(diff<-0.4){
+      md.setSpeeds(100*(-diff),0);
       delay(100);
       md.setSpeeds(0,0);
+      delay(50);
+      distL = left(true);
+      distR = right(true);
+      if ((distL - blkL*10)>10||(distR-blkR*10)>10){
+        md.setSpeeds(-100*(-diff), 0);
+        delay(100);
+        md.setSpeeds(0,0);
+        delay(5);
+        break;
+      }
     }
     else{
       md.setSpeeds(0,0);
       md.setBrakes(400,400);
+      delay(5);
       break;
     }
+    diff = (distL-blkL*10)-(distR-blkR*10);
    }
-  float average = (closeL + closeR))/2;
+  float average = ((distL-blkL*10) + (distR-blkR*10))/2;
   if(average<=4.6){
     while(1){
-       near = (((left(true)-blkL) + (right(true)-blkR))/2);
-      if(near>=4.8){
+       average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
+      if(average>=4.8){
         break;
       }
       moveBackward(99);  
-
-
     }
   }else if(average>=5.4){
       while(1){
-      near = (((left(true)-blkL) + (right(true)-blkR)/2);
-      if(near<=5.2){
+      average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
+      if(average<=5.2){
         break;
       }
       moveForward(99);
-
     }
   }
    
