@@ -141,37 +141,51 @@ void startListening() {
 
 
 void runTests() {
-//  RPIcommand = "w1";
-//  vert_counter +=10;       
-//  hori_counter +=10;
-//  delay(2000);
-//  delay(2000);
-//  alignFront(&sensortwo, &sensorone); 
-
-  
-  delay(5000);
-  int  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+  delay(2000);
+  rotateLeft(2);
+  alignFront(&sensortwo,&sensorthree);
   rotateRight(2);
-  delay(1500);
-  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+//  moveForward(2);
+//  moveForward(3);
+//  moveForward(4);
+//  moveForward(5);
+//  moveForward(6);
+//  moveForward(7);
+//  moveForward(8);
+//  moveForward(9);
+//  moveForward(10);
+//  moveForward(11);
+//  moveForward(12);
+//  moveForward(13);
+//  moveForward(14);
+//  moveForward(15);
+//  moveForward(16);
+//  moveForward(17);
+              
   
-  rotateRight(2);
-  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+//  delay(5000);
+//  int  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
+//  rotateRight(2);
+//  delay(1500);
+//  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
+//  
+//  rotateRight(2);
+//  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
 }
 
 
