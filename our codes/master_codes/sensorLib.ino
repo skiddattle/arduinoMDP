@@ -65,6 +65,18 @@ void checkFrontAlign() {
         alignFront(&sensorone, &sensorthree);
         resetFrontAlignCounter();
     }
+    else{
+        if (align && sensortwo(false)<=30&& sensorthree(false)<=30) {
+        alignUnevenFront(&sensortwo, &sensorthree);
+        resetFrontAlignCounter();
+        } else if (align && sensortwo(false)<=30&& sensorone(false)<=30) {      //check left and mid, 2 and 1
+        alignUnevenFront(&sensortwo, &sensorone);                                 //order matters
+        resetFrontAlignCounter();
+        } else if (align && sensorone(false)<=30&& sensorthree(false)<=30) {      //check mid and right, 1 and 3
+        alignUnevenFront(&sensorone, &sensorthree);
+        resetFrontAlignCounter();
+    }
+    }
 }
 
 void resetFrontAlignCounter() {
@@ -126,6 +138,7 @@ void alignLeft(){
     
 }
 
+
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
@@ -181,6 +194,58 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   }else if(average>=5.4){
       while(1){
       near = ((left(true) + right(true))/2);
+      if(near<=5.2){
+        break;
+      }
+      moveForward(99);
+
+    }
+  }
+   
+  //get new raw sensors readings
+  resetSensorsReadings();
+}
+
+void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
+  float distL = left(true);
+  float distR = right(true);
+  int blkL = distL/10;
+  int blkR = distR/10;
+  float closeL = distL - blkL;
+  float closeR = distR - blkR;
+  float diff = closeL - closeR;
+  //rotation
+   while(1){
+    if(diff>0.4){
+      md.setSpeeds(-150*diff,0);  
+      delay(100);
+      md.setSpeeds(0, 0);
+    }
+    if(diff<-0.4){
+      md.setSpeeds(150*(-diff),0);
+      delay(100);
+      md.setSpeeds(0,0);
+    }
+    else{
+      md.setSpeeds(0,0);
+      md.setBrakes(400,400);
+      break;
+    }
+   }
+  float average = (closeL + closeR))/2;
+  if(average<=4.6){
+    while(1){
+       near = (((left(true)-blkL) + (right(true)-blkR))/2);
+      if(near>=4.8){
+        break;
+      }
+      moveBackward(99);  
+
+
+    }
+  }else if(average>=5.4){
+      while(1){
+      near = (((left(true)-blkL) + (right(true)-blkR)/2);
       if(near<=5.2){
         break;
       }
