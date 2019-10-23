@@ -177,20 +177,20 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
     }
   }
   float average = (left(true) + right(true))/2;
-  if(average<=4.6){
+  if(average<=4.8){
     while(1){
        near = ((left(true) + right(true))/2);
-      if(near>=4.8){
+      if(near>=4.9){
         break;
       }
       moveBackward(99);  
 
 
     }
-  }else if(average>=5.4){
+  }else if(average>=5.2){
       while(1){
       near = ((left(true) + right(true))/2);
-      if(near<=5.2){
+      if(near<=5){
         break;
       }
       moveForward(99);

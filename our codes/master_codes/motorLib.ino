@@ -54,7 +54,7 @@ void moveForward(int blockstomove) {
       {
           tickstomove = 560;//275
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-5,currentSpeed);
+          md.setSpeeds(currentSpeed-1,currentSpeed);
         }
         break;
       }
@@ -62,7 +62,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 1155;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-5,currentSpeed);
+          md.setSpeeds(currentSpeed-10,currentSpeed);
         }
         break;
       }
@@ -70,7 +70,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 1760;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-6,currentSpeed);
+          md.setSpeeds(currentSpeed-10,currentSpeed);
         }
         break;
       }
@@ -78,7 +78,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 2380;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-6,currentSpeed);
+          md.setSpeeds(currentSpeed-12,currentSpeed);
         }
         break;
       }
@@ -86,7 +86,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 2985;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-7,currentSpeed);
+          md.setSpeeds(currentSpeed-12,currentSpeed);
         }
         break;
       }
@@ -94,7 +94,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 3615;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-7,currentSpeed);
+          md.setSpeeds(currentSpeed-12,currentSpeed);
         }
         break;
       }
@@ -102,7 +102,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 4195;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-8,currentSpeed);
+          md.setSpeeds(currentSpeed-13,currentSpeed);
         }
         break;
       }
@@ -110,7 +110,7 @@ void moveForward(int blockstomove) {
       {
         tickstomove = 4775;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-8,currentSpeed);
+          md.setSpeeds(currentSpeed-11,currentSpeed);
         }
         break;
       }
@@ -124,73 +124,68 @@ void moveForward(int blockstomove) {
       }
     case 10: 
     {
-        tickstomove = 5370;
+        tickstomove = 5950;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-9,currentSpeed);
+          md.setSpeeds(currentSpeed-8,currentSpeed);
         }
         break;
     }
     case 11: 
     {
-        tickstomove = 5930;
+        tickstomove = 6540;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-10,currentSpeed);
+          md.setSpeeds(currentSpeed-9,currentSpeed);
         }
         break;
     }
     case 12: 
     {
-        tickstomove = 6490;
+        tickstomove = 7100;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-10,currentSpeed);
+          md.setSpeeds(currentSpeed-7,currentSpeed);
         }
         break;
     }
     case 13: 
     {
-        tickstomove = 7050;
+        tickstomove = 7750;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-11,currentSpeed);
+          md.setSpeeds(currentSpeed-8,currentSpeed);
         }
         break;
     }
     case 14: 
     {
-        tickstomove = 7610;
+        tickstomove = 8370;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-11,currentSpeed);
+          md.setSpeeds(currentSpeed-7,currentSpeed);
         }
         break;
     }
     case 15: 
     {
-        tickstomove = 8170;
+        tickstomove = 8880;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-12,currentSpeed);
+          md.setSpeeds(currentSpeed-8,currentSpeed);
         }
         break;
     }
     case 16: 
     {
-        tickstomove = 8730;
+        tickstomove = 9550;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-12,currentSpeed);
-        }
-        break;
-    }
-    case 17: 
-    {
-        tickstomove = 9290;
-        while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-13,currentSpeed);
+          md.setSpeeds(currentSpeed-8,currentSpeed);
         }
         break;
     }
     case 99:
     {
         tickstomove = 26;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-1,currentSpeed);
+        }
         break;
-  }
+   }
  }
 
 
@@ -318,7 +313,7 @@ void rotateLeft(int degreetomove) {
     tickstomove = 105; //45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 782;//775 //90 degrees
+    tickstomove = 770;//782 //90 degrees
   }
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees
@@ -347,7 +342,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 772; //90 degrees
+    tickstomove = 767; //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees
