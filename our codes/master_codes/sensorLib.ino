@@ -146,7 +146,7 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
 
   if(diff>0){
       while(1){
-      aligned = left(false) - right(false); //changed this from false to true
+      aligned = left(false) - right(false); 
       if(aligned<=0.2){
         break;
       }
@@ -166,7 +166,7 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   else if(diff<0){
 
       while(1){
-      aligned = left(false) - right(false);//changed this from false to true
+      aligned = left(false) - right(false);
       if(aligned>=-0.2){
         break;
       }  
