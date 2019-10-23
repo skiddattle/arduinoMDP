@@ -219,14 +219,14 @@ void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
   //rotation
    while(1){
     if(diff>0.4){
-      md.setSpeeds(-100*diff,0);  
+      md.setSpeeds(0,-100);  
       delay(100);
       md.setSpeeds(0, 0);
       delay(50);
       distL = left(true);
       distR = right(true);
       if ((distL - blkL*10)>10||(distR-blkR*10)>10){
-        md.setSpeeds(100*diff, 0);
+        md.setSpeeds(0,100);
         delay(100);
         md.setSpeeds(0,0);
         delay(5);
@@ -234,14 +234,14 @@ void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
       }
     }
     else if(diff<-0.4){
-      md.setSpeeds(100*(-diff),0);
+      md.setSpeeds(-100,0);
       delay(100);
       md.setSpeeds(0,0);
       delay(50);
       distL = left(true);
       distR = right(true);
       if ((distL - blkL*10)>10||(distR-blkR*10)>10){
-        md.setSpeeds(-100*(-diff), 0);
+        md.setSpeeds(100, 0);
         delay(100);
         md.setSpeeds(0,0);
         delay(5);

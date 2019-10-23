@@ -143,9 +143,7 @@ void startListening() {
 
 void runTests() {
   delay(2000);
-  rotateLeft(2);
-  alignFront(&sensortwo,&sensorthree);
-  rotateRight(2);
+  alignUnevenFront(&sensortwo,&sensorthree);
 //  moveForward(17);
 //  delay(1000);
 //  rotateRight(2);
