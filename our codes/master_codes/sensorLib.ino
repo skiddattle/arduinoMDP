@@ -282,7 +282,7 @@ void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
   resetSensorsReadings();
 }
 
-void wallAlign(float (*left)(boolean),float (*right)(boolean)){
+void wallAlign(void (*left)(boolean),void (*right)(boolean)){
   resetLeftAlignCounter();
 
   rotateLeft(2);
