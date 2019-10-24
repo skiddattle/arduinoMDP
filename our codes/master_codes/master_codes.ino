@@ -79,7 +79,6 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
-  runTests();
   startListening();
 }
 

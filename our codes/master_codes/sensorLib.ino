@@ -25,10 +25,10 @@ void checkLeftAlign() {
         wallAlign(&sensortwo, &sensorthree);                    //left and right
         resetLeftAlignCounter();
     }
-//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
-//        wallAlign(&sensorone, &sensorthree);                    //mid and right
-//        resetLeftAlignCounter();
-//    }
+    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
+        wallAlign(&sensorone, &sensorthree);                    //mid and right
+        resetLeftAlignCounter();
+    }
     
     
     //code to keep track of left blocks
