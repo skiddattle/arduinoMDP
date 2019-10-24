@@ -142,7 +142,7 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
         break;
       }
       md.setSpeeds(-100,0);  
-      delay(100);
+      delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
@@ -161,8 +161,8 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       if(aligned>=-0.2){
         break;
       }  
-      md.setSpeeds(0,-100);  
-      delay(100);
+      md.setSpeeds(100,0);  
+      delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
