@@ -44,6 +44,16 @@ void setupPID() {
 }
 //
 void moveForward(int blockstomove) {
+    int forwardlimit = 5;       //limit movement to 5 blocks every time
+    
+    while (blockstomove > forwardlimit){
+        moveForwardwCalibration(forwardlimit);
+        blockstomove = blockstomove - forwardlimit;
+    }
+    //final movement
+    moveForwardwCalibration(blockstomove);
+}
+void moveForwardwCalibration(int blockstomove) {
   double currentSpeed = 0;
   currentSpeed = MOVE_MAX_SPEED;
   initializeTick();
@@ -192,6 +202,8 @@ void moveForward(int blockstomove) {
   initializeMotor_End();
   resetSensorsReadings();
 }
+
+
 //
 void moveBackward(int blockstomove) {
   initializeTick();
