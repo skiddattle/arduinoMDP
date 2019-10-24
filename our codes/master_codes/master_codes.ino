@@ -79,7 +79,7 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
-//  runTests();
+ runTests();
   
   startListening();
 }
@@ -152,7 +152,7 @@ void runTests() {
 //              
 //  
     delay(2000);
-    wallAlign(&sensorone,&sensorthree);
+    wallAlign(&sensortwo,&sensorone);
 //    rotateLeft(2);
 //    delay(1000);
 //    rotateLeft(2);
