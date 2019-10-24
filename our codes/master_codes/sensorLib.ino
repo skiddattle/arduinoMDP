@@ -67,16 +67,7 @@ void checkFrontAlign() {
     } else if (align && sensorone(false)<=10&& sensorthree(false)<=10) {      //check mid and right, 1 and 3
         alignFront(&sensorone, &sensorthree);
         resetFrontAlignCounter();
-    } //else if (align && sensortwo(false)<=23&& sensorthree(false)<=23) {
-//      alignUnevenFront(&sensortwo, &sensorthree);
-//      resetFrontAlignCounter();
-//    } else if (align && sensortwo(false)<=23&& sensorone(false)<=23) {      //check left and mid, 2 and 1
-//      alignUnevenFront(&sensortwo, &sensorone);                                 //order matters
-//      resetFrontAlignCounter();
-//    } else if (align && sensorone(false)<=23&& sensorthree(false)<=23) {      //check mid and right, 1 and 3
-//      alignUnevenFront(&sensorone, &sensorthree);
-//      resetFrontAlignCounter();
-//    }
+    }
 }
 
 void resetFrontAlignCounter() {
@@ -209,78 +200,6 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
       }
       moveForward(99);
 
-    }
-  }
-   
-  //get new raw sensors readings
-  resetSensorsReadings();
-}
-
-void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
-  float distL = left(true);
-  float distR = right(true);
-  int blkL = distL/10;
-  int blkR = distR/10;
-  float diff = (distL - (blkL*10)) - (distR - (blkR*10));
-  //rotation
-   while(1){
-    if(diff>0.4){
-      md.setSpeeds(-100,0);  
-      delay(100);
-      md.setSpeeds(0, 0);
-      delay(5);
-      distL = left(true);
-      distR = right(true);
-      blkL = distL/10;
-      blkR = distR/10;
-      if (distL>=30 || distR>=30){
-        md.setBrakes(400,400);
-        resetSensorsReadings();
-        delay(5);
-        break;
-      }
-    }
-    else if(diff<-0.4){
-      md.setSpeeds(0,-100);
-      delay(100);
-      md.setSpeeds(0,0);
-      delay(5);
-      distL = left(true);
-      distR = right(true);
-      blkL = distL/10;
-      blkR = distR/10;
-      if (distL>=30 || distR>=30){
-        md.setBrakes(400,400);
-        resetSensorsReadings();
-        delay(5);
-        break;
-      }
-    }
-    else{
-      md.setSpeeds(0,0);
-      md.setBrakes(400,400);
-      resetSensorsReadings();
-      delay(5);
-      break;
-    }
-    diff = (distL-blkL*10)-(distR-blkR*10);
-   }
-  float average = ((distL-blkL*10) + (distR-blkR*10))/2;
-  if(average<=4.8){
-    while(1){
-       average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
-      if(average>=4.9){
-        break;
-      }
-      moveBackward(99);  
-    }
-  }else if(average>=5.2){
-      while(1){
-      average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
-      if(average<=5){
-        break;
-      }
-      moveForward(99);
     }
   }
    
