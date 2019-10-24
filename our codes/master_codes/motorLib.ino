@@ -10,7 +10,7 @@ const int TURN_TICKS_L = 770;
 const int TURN_TICKS_R = 763;
 const int TICKS[10] = {545, 1155, 1760, 2380, 2985, 3615, 4195, 4775, 5370};
 const double DIST_WALL_CENTER_BOX = 1.58;
-const double kp = 1, ki =0.7, kd =0;
+const double kp = 7.35, ki =1.25, kd =0; //kp 1, kp =0.7
 
 int TENCM_TICKS_OFFSET = 0;
 
@@ -44,16 +44,6 @@ void setupPID() {
 }
 //
 void moveForward(int blockstomove) {
-    //inch-wise movement
-    if (blockstomove == 99) {
-        tickstomove = 26;
-        while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-1,currentSpeed);
-        }
-        return;
-    }
-    
-    
     int forwardlimit = 5;       //limit movement to 5 blocks every time
     
     while (blockstomove > forwardlimit){
@@ -198,7 +188,22 @@ void moveForwardwCalibration(int blockstomove) {
         }
         break;
     }
-
+    case 17: 
+    {
+        tickstomove = 10100;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-8,currentSpeed);
+        }
+        break;
+    }
+    case 99:
+    {
+        tickstomove = 26;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-1,currentSpeed);
+        }
+        break;
+   }
  }
 
 

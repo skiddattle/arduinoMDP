@@ -149,29 +149,36 @@ void runTests() {
 
 //              
 //  
-  delay(2000);
-  int  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
-  rotateLeft(2);
-  delay(1500);
-  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
-  
-  rotateLeft(2);
-  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+    delay(2000);
+    rotateRight(2);
+    delay(1000);
+    rotateRight(2);
+    delay(1000);
+    rotateRight(2);
+    delay(1000);
+    rotateRight(2);
+//  int  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
+//  rotateLeft(2);
+//  delay(1500);
+//  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
+//  
+//  rotateLeft(2);
+//  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
 }
 
 
