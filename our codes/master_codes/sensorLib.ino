@@ -188,6 +188,9 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   if(average<=4.8){
     while(1){
        near = ((left(true) + right(true))/2);
+      if(left(false)>10||right(false)>10){
+         break;
+      }
       if(near>=4.9){
         break;
       }
@@ -198,6 +201,9 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   }else if(average>=5.2){
       while(1){
       near = ((left(true) + right(true))/2);
+      if(left(false)>10||right(false)>10){
+         break;
+      }
       if(near<=5){
         break;
       }

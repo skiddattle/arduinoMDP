@@ -79,6 +79,7 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
+  runTests();
   startListening();
 }
 
@@ -141,8 +142,7 @@ void startListening() {
 
 
 void runTests() {
-  delay(2000);
-  alignUnevenFront(&sensortwo,&sensorthree);
+//  alignUnevenFront(&sensortwo,&sensorthree);
 //  moveForward(17);
 //  delay(1000);
 //  rotateRight(2);
@@ -150,29 +150,29 @@ void runTests() {
 
 //              
 //  
-//  delay(5000);
-//  int  test = 4;
-//  while(test>0){
-//    moveForward(1);//comment out
-//    delay(1500);
-//    test--;
-//  }
-//  rotateLeft(2);
-//  delay(1500);
-//  test = 4;
-//  while(test>0){
-//    moveForward(1);//comment out
-//    delay(1500);
-//    test--;
-//  }
-//  
-//  rotateLeft(2);
-//  test = 4;
-//  while(test>0){
-//    moveForward(1);//comment out
-//    delay(1500);
-//    test--;
-//  }
+  delay(2000);
+  int  test = 4;
+  while(test>0){
+    moveForward(1);//comment out
+    delay(1500);
+    test--;
+  }
+  rotateLeft(2);
+  delay(1500);
+  test = 4;
+  while(test>0){
+    moveForward(1);//comment out
+    delay(1500);
+    test--;
+  }
+  
+  rotateLeft(2);
+  test = 4;
+  while(test>0){
+    moveForward(1);//comment out
+    delay(1500);
+    test--;
+  }
 }
 
 
