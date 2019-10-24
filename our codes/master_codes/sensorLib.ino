@@ -378,7 +378,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTL = sensorfive(false); // this returns the distance for Left Top Left
+    disLTL = sensorfive(true); // this returns the distance for Left Top Left
     blkLTL = leftCal(disLTL);
   } else {
     disLTL = -1;
@@ -386,7 +386,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTR = sensorfour(false); // this returns the distance for Left Top Right
+    disLTR = sensorfour(true); // this returns the distance for Left Top Right
     blkLTR = leftCal(disLTR);
   } else {
     disLTR = -1;
@@ -394,7 +394,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFR = sensorthree(false); // this returns the distance for Front Right
+    disFR = sensorthree(true); // this returns the distance for Front Right
     blkFR = frontCal(disFR);
   } else {
     blkFR = -1;
@@ -402,7 +402,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFL = sensortwo(false); // this returns the distance for Front Left
+    disFL = sensortwo(true); // this returns the distance for Front Left
     blkFL = frontCal(disFL);
   } else {
     disFL = -1;
@@ -410,7 +410,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFM = sensorone(false); // this returns the distance for Front Middle
+    disFM = sensorone(true); // this returns the distance for Front Middle
     blkFM = frontMidCal(disFM);
   } else {
     disFM = -1;
