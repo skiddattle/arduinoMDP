@@ -44,6 +44,16 @@ void setupPID() {
 }
 //
 void moveForward(int blockstomove) {
+    //inch-wise movement
+    if (blockstomove == 99) {
+        tickstomove = 26;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-1,currentSpeed);
+        }
+        return;
+    }
+    
+    
     int forwardlimit = 5;       //limit movement to 5 blocks every time
     
     while (blockstomove > forwardlimit){
@@ -188,14 +198,7 @@ void moveForwardwCalibration(int blockstomove) {
         }
         break;
     }
-    case 99:
-    {
-        tickstomove = 26;
-        while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-1,currentSpeed);
-        }
-        break;
-   }
+
  }
 
 
