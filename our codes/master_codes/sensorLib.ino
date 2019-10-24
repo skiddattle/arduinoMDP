@@ -25,24 +25,24 @@ void checkLeftAlign() {
         wallAlign(&sensortwo, &sensorthree);                    //left and right
         resetLeftAlignCounter();
     }
-    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
-        wallAlign(&sensorone, &sensorthree);                    //mid and right
-        resetLeftAlignCounter();
-    }
-    //desperation! use staircase align
-    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
-        rotateLeft(2);
-        alignStaircase(&sensorone, &sensorthree, true);                    //mid and right
-        rotateRight(2);
-
-        resetLeftAlignCounter();
-    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfive(true)<=20) {
-        rotateLeft(2);
-        alignStaircase(&sensortwo, &sensorone, false);                    //mid and right
-        rotateRight(2);
-
-        resetLeftAlignCounter();
-    }
+//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
+//        wallAlign(&sensorone, &sensorthree);                    //mid and right
+//        resetLeftAlignCounter();
+//    }
+//    //desperation! use staircase align
+//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
+//        rotateLeft(2);
+//        alignStaircase(&sensorone, &sensorthree, true);                    //mid and right
+//        rotateRight(2);
+//
+//        resetLeftAlignCounter();
+//    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfive(true)<=20) {
+//        rotateLeft(2);
+//        alignStaircase(&sensortwo, &sensorone, false);                    //mid and right
+//        rotateRight(2);
+//
+//        resetLeftAlignCounter();
+//    }
     
     
     //code to keep track of left blocks
@@ -75,33 +75,33 @@ void checkFrontAlign() {
     if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
         alignFront(&sensortwo, &sensorthree);
         resetFrontAlignCounter();
-    } else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
-        alignFront(&sensortwo, &sensorone);                                 //order matters
-        resetFrontAlignCounter();
-    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
-        alignFront(&sensorone, &sensorthree);
-        resetFrontAlignCounter();
-    }
+    } //else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
+//        alignFront(&sensortwo, &sensorone);                                 //order matters
+//        resetFrontAlignCounter();
+//    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
+//        alignFront(&sensorone, &sensorthree);
+//        resetFrontAlignCounter();
+//    }
     
-    //desperation! use staircase align
-    else if (align && sensortwo(false)<=10) {
-        if (sensorone(false)<=20) {
-            alignStaircase(&sensortwo, &sensorone, true);
-        }
-        resetFrontAlignCounter();
-    } else if (align && sensorthree(false)<=10) {      //check left and mid, 2 and 1
-        if (sensorone(false)<=20) {
-            alignStaircase(&sensorone, &sensorthree, false);
-        }
-        resetFrontAlignCounter();
-    } else if (align && sensorone(false)<=10) {      //check mid and right, 1 and 3
-        if (sensortwo(false)<=20) {
-            alignStaircase(&sensortwo, &sensorone, false);
-        } else if (sensorthree(false)<=20) {
-            alignStaircase(&sensorone, &sensorthree, true);
-        }
-        resetFrontAlignCounter();
-    }
+//    //desperation! use staircase align
+//    else if (align && sensortwo(false)<=10) {
+//        if (sensorone(false)<=20) {
+//            alignStaircase(&sensortwo, &sensorone, true);
+//        }
+//        resetFrontAlignCounter();
+//    } else if (align && sensorthree(false)<=10) {      //check left and mid, 2 and 1
+//        if (sensorone(false)<=20) {
+//            alignStaircase(&sensorone, &sensorthree, false);
+//        }
+//        resetFrontAlignCounter();
+//    } else if (align && sensorone(false)<=10) {      //check mid and right, 1 and 3
+//        if (sensortwo(false)<=20) {
+//            alignStaircase(&sensortwo, &sensorone, false);
+//        } else if (sensorthree(false)<=20) {
+//            alignStaircase(&sensorone, &sensorthree, true);
+//        }
+//        resetFrontAlignCounter();
+//    }
 }
 
 void resetFrontAlignCounter() {
@@ -254,12 +254,12 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
   if(diff>0){
       while(1){
       aligned = left(false) - right(false) - flatdist; 
-      if(aligned<=0.2){
+      if(aligned<=0.5){
         break;
       }
       
       //HI BRYAN! FIX CALIBRATION BEFORE FIXING ;
-      md.setSpeeds(-100,0)//HI BRYAN! FIX CALIBRATION 
+      md.setSpeeds(-150,0);//HI BRYAN! FIX CALIBRATION 
       delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
@@ -279,12 +279,12 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
 
       while(1){
       aligned = left(false) - right(false) - flatdist;
-      if(aligned>=-0.2){
+      if(aligned>=-0.5){
         break;
       }  
       
       //HI BRYAN! FIX CALIBRATION
-      md.setSpeeds(100,0)//HI BRYAN! FIX CALIBRATION
+      md.setSpeeds(150,0);//HI BRYAN! FIX CALIBRATION
       delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);

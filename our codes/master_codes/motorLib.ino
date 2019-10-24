@@ -68,7 +68,7 @@ void moveForwardwCalibration(int blockstomove) {
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 555;//275
+          tickstomove = 550;//275
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
           md.setSpeeds(currentSpeed-6,currentSpeed);
         }
