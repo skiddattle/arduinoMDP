@@ -29,6 +29,20 @@ void checkLeftAlign() {
         wallAlign(&sensorone, &sensorthree);                    //mid and right
         resetLeftAlignCounter();
     }
+    //desperation! use staircase align
+    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
+        rotateLeft(2);
+        alignStaircase(&sensorone, &sensorthree, true);                    //mid and right
+        rotateRight(2);
+
+        resetLeftAlignCounter();
+    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfive(true)<=20) {
+        rotateLeft(2);
+        alignStaircase(&sensortwo, &sensorone, false);                    //mid and right
+        rotateRight(2);
+
+        resetLeftAlignCounter();
+    }
     
     
     //code to keep track of left blocks
@@ -58,14 +72,34 @@ void checkFrontAlign() {
         }
     }
     //check left and right, 2 and 3
-    if (align && sensortwo(false)<=10&& sensorthree(false)<=10) {
+    if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
         alignFront(&sensortwo, &sensorthree);
         resetFrontAlignCounter();
-    } else if (align && sensortwo(false)<=10&& sensorone(false)<=10) {      //check left and mid, 2 and 1
+    } else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
         alignFront(&sensortwo, &sensorone);                                 //order matters
         resetFrontAlignCounter();
-    } else if (align && sensorone(false)<=10&& sensorthree(false)<=10) {      //check mid and right, 1 and 3
+    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
         alignFront(&sensorone, &sensorthree);
+        resetFrontAlignCounter();
+    }
+    
+    //desperation! use staircase align
+    else if (align && sensortwo(false)<=10) {
+        if (sensorone(false)<=20) {
+            alignStaircase(&sensortwo, &sensorone, true);
+        }
+        resetFrontAlignCounter();
+    } else if (align && sensorthree(false)<=10) {      //check left and mid, 2 and 1
+        if (sensorone(false)<=20) {
+            alignStaircase(&sensorone, &sensorthree, false);
+        }
+        resetFrontAlignCounter();
+    } else if (align && sensorone(false)<=10) {      //check mid and right, 1 and 3
+        if (sensortwo(false)<=20) {
+            alignStaircase(&sensortwo, &sensorone, false);
+        } else if (sensorthree(false)<=20) {
+            alignStaircase(&sensorone, &sensorthree, true);
+        }
         resetFrontAlignCounter();
     }
 }
@@ -207,9 +241,109 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   resetSensorsReadings();
 }
 
-void wallAlign(void (*left)(boolean),void (*right)(boolean)){
-  resetLeftAlignCounter();
+void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
+  float flatdist = 10;
+  if (leftisNear) {
+      flatdist = flatdist * -1;         //flip flat distance to negative
+  }
+    
+  float near;
+  float aligned;
+  float diff = left(true) - right(true) - flatdist;
 
+  if(diff>0){
+      while(1){
+      aligned = left(false) - right(false) - flatdist; 
+      if(aligned<=0.2){
+        break;
+      }
+      
+      //HI BRYAN! FIX CALIBRATION BEFORE FIXING ;
+      md.setSpeeds(-100,0)//HI BRYAN! FIX CALIBRATION 
+      delay(50);
+      md.setSpeeds(0, 0);
+      md.setBrakes(400, 400);
+      delay(5);
+
+      resetSensorsReadings();
+      
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
+    }
+  }
+  else if(diff<0){
+
+      while(1){
+      aligned = left(false) - right(false) - flatdist;
+      if(aligned>=-0.2){
+        break;
+      }  
+      
+      //HI BRYAN! FIX CALIBRATION
+      md.setSpeeds(100,0)//HI BRYAN! FIX CALIBRATION
+      delay(50);
+      md.setSpeeds(0, 0);
+      md.setBrakes(400, 400);
+      delay(5);
+
+      resetSensorsReadings();
+      
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
+
+    }
+  }
+  
+  //displacement
+  float average = (left(true) + right(true) - abs(flatdist) )/2 ;
+  if(average<=4.8){
+    while(1){
+      near = ((left(true) + right(true) - abs(flatdist) )/2) ;
+      
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
+      if(near>=4.9){
+        break;
+      }
+      moveBackward(99);  
+
+
+    }
+  }else if(average>=5.2){
+      while(1){
+      near = ((left(true) + right(true) - abs(flatdist) )/2);
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
+      if(near<=5){
+        break;
+      }
+      moveForward(99);
+
+    }
+  }
+   
+  //get new raw sensors readings
+  resetSensorsReadings();
+}
+
+
+void wallAlign(void (*left)(boolean),void (*right)(boolean)){
   rotateLeft(2);
   alignFront(left, right);
   rotateRight(2);
@@ -372,6 +506,10 @@ void sensorReading(long Sensor) {
 
 
 }
+
+
+
+
 void rightSensorReading(){
   String blocks = "";
   int disRM=SharpIR6.distance();  // this returns the distance for Left Top Left
