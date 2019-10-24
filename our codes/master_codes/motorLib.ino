@@ -44,14 +44,9 @@ void setupPID() {
 }
 //
 void moveForward(int blockstomove) {
-  int tickstomove;
-  double currentSpeed = MOVE_MAX_SPEED;
     //inch wise movement
     if (blockstomove == 99) {
-        tickstomove = 26;
-        while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-5,currentSpeed);
-        }
+        moveForwardwCalibration(99);
         return;
     }
     
@@ -207,6 +202,14 @@ void moveForwardwCalibration(int blockstomove) {
         }
         break;
     }
+    case 99:
+    {
+        tickstomove = 26;
+        while (tick_R <= tickstomove || tick_L <= tickstomove) {
+          md.setSpeeds(currentSpeed-1,currentSpeed);
+        }
+        break;
+   }
 
  }
 
