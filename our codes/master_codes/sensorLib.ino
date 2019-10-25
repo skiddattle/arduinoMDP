@@ -169,46 +169,7 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float aligned;
   float diff = left(true) - right(true);
 
-  if(diff>0){
-      while(1){
-      aligned = left(false) - right(false); //changed this from false to true
-      if(aligned<=0.2){
-        break;
-      }
-      md.setSpeeds(-150,0);  
-      delay(50);
-      md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
-      delay(5);
 
-      resetSensorsReadings();
-      
-      if(left(false)>10||right(false)>10){
-         break;
-      }
-    }
-  }
-  else if(diff<0){
-
-      while(1){
-      aligned = left(false) - right(false);//changed this from false to true
-      if(aligned>=-0.2){
-        break;
-      }  
-      md.setSpeeds(150,0);  
-      delay(50);
-      md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
-      delay(5);
-
-      resetSensorsReadings();
-      
-      if(left(false)>10||right(false)>10){
-         break;
-      }
-
-    }
-  }
   float average = (left(true) + right(true))/2;
   if(average<=4.8){
     while(1){
@@ -239,6 +200,55 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
    
   //get new raw sensors readings
   resetSensorsReadings();
+}
+
+void alignRotate() {
+    int counter = 0;
+    
+    while(left(false) == right(false) || counter<30) {
+      if(diff>0){
+          aligned = left(false) - right(false); //changed this from false to true
+          if(aligned<=0.2){
+            break;
+          }
+          md.setSpeeds(-150,0);  
+
+
+          
+          
+          // if(left(false)>10||right(false)>10){
+             // break;
+          // }
+    }
+    else {
+
+
+          aligned = left(false) - right(false);//changed this from false to true
+          if(aligned>=-0.2){
+            break;
+          }  
+          md.setSpeeds(150,0);  
+
+
+          
+          if(left(false)>10||right(false)>10){
+             break;
+          }
+
+        
+        }
+        resetSensorsReadings();
+        counter++;
+          
+    }
+    md.setSpeeds(0, 0);
+    md.setBrakes(400, 400);
+    
+    
+}
+
+void aligndisplacement() {
+    
 }
 
 void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
