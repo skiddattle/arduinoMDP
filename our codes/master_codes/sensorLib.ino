@@ -273,13 +273,9 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
   else if(diff<0){
 
       while(1){
-<<<<<<< HEAD
-      aligned = left(false) - right(false);
-      if(aligned>=-0.2){
-=======
+
       aligned = left(false) - right(false) - flatdist;
       if(aligned>=-0.5){
->>>>>>> e8dee6d70fa492770f908f5043438469f1663d16
         break;
       }  
       
