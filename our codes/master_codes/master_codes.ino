@@ -79,7 +79,8 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
-  runTests();
+ runTests();
+  
   startListening();
 }
 
@@ -121,8 +122,8 @@ void startListening() {
       
     }
     if (RPIcommand[0] == 'a') {
-      vert_counter += alignThreshold;       //this is to fix double align
-      hori_counter += alignThreshold;
+      vert_counter += 1;       //this is to fix double align
+      hori_counter += 1;
       
       checkFrontAlign();
       middleLeftisBlock = false;
@@ -142,8 +143,7 @@ void startListening() {
 
 
 void runTests() {
-  delay(2000);
-  alignUnevenFront(&sensortwo,&sensorthree);
+//  alignUnevenFront(&sensortwo,&sensorthree);
 //  moveForward(17);
 //  delay(1000);
 //  rotateRight(2);
@@ -151,7 +151,15 @@ void runTests() {
 
 //              
 //  
-//  delay(5000);
+    delay(2000);
+    wallAlign(&sensortwo,&sensorone);
+//    rotateLeft(2);
+//    delay(1000);
+//    rotateLeft(2);
+//    delay(1000);
+//    rotateLeft(2);
+//    delay(1000);
+//    rotateLeft(2);
 //  int  test = 4;
 //  while(test>0){
 //    moveForward(1);//comment out

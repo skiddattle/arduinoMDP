@@ -29,6 +29,20 @@ void checkLeftAlign() {
 //        wallAlign(&sensorone, &sensorthree);                    //mid and right
 //        resetLeftAlignCounter();
 //    }
+//    //desperation! use staircase align
+//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
+//        rotateLeft(2);
+//        alignStaircase(&sensorone, &sensorthree, true);                    //mid and right
+//        rotateRight(2);
+//
+//        resetLeftAlignCounter();
+//    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfive(true)<=20) {
+//        rotateLeft(2);
+//        alignStaircase(&sensortwo, &sensorone, false);                    //mid and right
+//        rotateRight(2);
+//
+//        resetLeftAlignCounter();
+//    }
     
     
     //code to keep track of left blocks
@@ -58,24 +72,35 @@ void checkFrontAlign() {
         }
     }
     //check left and right, 2 and 3
-    if (align && sensortwo(false)<=10&& sensorthree(false)<=10) {
+    if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
         alignFront(&sensortwo, &sensorthree);
         resetFrontAlignCounter();
-    } else if (align && sensortwo(false)<=10&& sensorone(false)<=10) {      //check left and mid, 2 and 1
-        alignFront(&sensortwo, &sensorone);                                 //order matters
-        resetFrontAlignCounter();
-    } else if (align && sensorone(false)<=10&& sensorthree(false)<=10) {      //check mid and right, 1 and 3
-        alignFront(&sensorone, &sensorthree);
-        resetFrontAlignCounter();
-    } //else if (align && sensortwo(false)<=30&& sensorthree(false)<=30) {
-//      alignUnevenFront(&sensortwo, &sensorthree);
-//      resetFrontAlignCounter();
-//    } else if (align && sensortwo(false)<=30&& sensorone(false)<=30) {      //check left and mid, 2 and 1
-//      alignUnevenFront(&sensortwo, &sensorone);                                 //order matters
-//      resetFrontAlignCounter();
-//    } else if (align && sensorone(false)<=30&& sensorthree(false)<=30) {      //check mid and right, 1 and 3
-//      alignUnevenFront(&sensorone, &sensorthree);
-//      resetFrontAlignCounter();
+    } //else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
+//        alignFront(&sensortwo, &sensorone);                                 //order matters
+//        resetFrontAlignCounter();
+//    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
+//        alignFront(&sensorone, &sensorthree);
+//        resetFrontAlignCounter();
+//    }
+    
+//    //desperation! use staircase align
+//    else if (align && sensortwo(false)<=10) {
+//        if (sensorone(false)<=20) {
+//            alignStaircase(&sensortwo, &sensorone, true);
+//        }
+//        resetFrontAlignCounter();
+//    } else if (align && sensorthree(false)<=10) {      //check left and mid, 2 and 1
+//        if (sensorone(false)<=20) {
+//            alignStaircase(&sensorone, &sensorthree, false);
+//        }
+//        resetFrontAlignCounter();
+//    } else if (align && sensorone(false)<=10) {      //check mid and right, 1 and 3
+//        if (sensortwo(false)<=20) {
+//            alignStaircase(&sensortwo, &sensorone, false);
+//        } else if (sensorthree(false)<=20) {
+//            alignStaircase(&sensorone, &sensorthree, true);
+//        }
+//        resetFrontAlignCounter();
 //    }
 }
 
@@ -142,52 +167,153 @@ void alignLeft(){
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
-  float diff = left(true) - right(true);
+  
+  // while(left(true)<5.5 || right(true)<5.5){
+    // md.setSpeeds(-200,-200);
+    // delay(50);
+    // md.setSpeeds(0,0);
+  // }
+
+  alignRotate();
+  aligndisplacement();
+  
+}
+
+void alignRotate() {
+    int counter = 0;
+    boolean lastrotateleft; 
+    resetSensorsReadings();
+    
+    while(left(false) != right(false) || counter<15) {
+        diff = left(false) - right(false);
+        
+        if (left(false)>10||right(false)>10){
+            if (lastrotateleft != NULL) {
+                if (lastrotateleft){
+                    //rotate right, reverse direction
+                    md.setSpeeds(-250,250);  
+                    lastrotateleft = false;
+                } else {
+                    md.setSpeeds(250,-250);  
+                    lastrotateleft = true;
+                }
+            }
+        } else if(diff>0){
+              md.setSpeeds(-250,250);  
+              lastrotateleft = false;
+        }
+        else { 
+              md.setSpeeds(250,250);  
+              lastrotateleft = true;
+
+            }
+        resetSensorsReadings();
+        counter++;
+          
+    }
+    md.setSpeeds(0, 0);
+    md.setBrakes(400, 400);
+}
+
+void aligndisplacement() {
+  int counter = 0;
+  float average = (left(false) + right(false))/2;
+  resetSensorsReadings();
+  
+  while(average<=4.8 ||average>= 5.2 || counter<15 ) {
+    if(average<=4.8){
+        //backward
+        md.setSpeeds(-250,-250); 
+
+    } else if (average>=5.2) {
+        //forward
+        md.setSpeeds(250,-250); 
+    }
+    resetSensorsReadings();
+    counter++;
+  }
+   resetSensorsReadings(); 
+}
+
+void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
+  float flatdist = 10;
+  if (leftisNear) {
+      flatdist = flatdist * -1;         //flip flat distance to negative
+  }
+    
+  float near;
+  float aligned;
+  float diff = left(true) - right(true) - flatdist;
 
   if(diff>0){
       while(1){
-      aligned = left(false) - right(false); 
-      if(aligned<=0.2){
+
+      aligned = left(false) - right(false) - flatdist; 
+      if(aligned<=0.5){
         break;
       }
-      md.setSpeeds(-100,0);  
-      delay(100);
+      
+      //HI BRYAN! FIX CALIBRATION BEFORE FIXING ;
+      md.setSpeeds(-150,0);//HI BRYAN! FIX CALIBRATION 
+      delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
 
       resetSensorsReadings();
       
-      if(left(false)>10||right(false)>10){
-         break;
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
       }
     }
   }
   else if(diff<0){
 
       while(1){
+<<<<<<< HEAD
       aligned = left(false) - right(false);
       if(aligned>=-0.2){
+=======
+      aligned = left(false) - right(false) - flatdist;
+      if(aligned>=-0.5){
+>>>>>>> e8dee6d70fa492770f908f5043438469f1663d16
         break;
       }  
-      md.setSpeeds(0,-100);  
-      delay(100);
+      
+      //HI BRYAN! FIX CALIBRATION
+      md.setSpeeds(150,0);//HI BRYAN! FIX CALIBRATION
+      delay(50);
       md.setSpeeds(0, 0);
       md.setBrakes(400, 400);
       delay(5);
 
       resetSensorsReadings();
       
-      if(left(false)>10||right(false)>10){
-         break;
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
       }
 
     }
   }
-  float average = (left(true) + right(true))/2;
+  
+  //displacement
+  float average = (left(true) + right(true) - abs(flatdist) )/2 ;
   if(average<=4.8){
     while(1){
-       near = ((left(true) + right(true))/2);
+      near = ((left(true) + right(true) - abs(flatdist) )/2) ;
+      
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
       if(near>=4.9){
         break;
       }
@@ -197,7 +323,13 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
     }
   }else if(average>=5.2){
       while(1){
-      near = ((left(true) + right(true))/2);
+      near = ((left(true) + right(true) - abs(flatdist) )/2);
+      if (leftisNear && left(false)>10) {
+          break;
+      }
+      else if (!leftisNear && right(false)>10) {
+          break;
+      }
       if(near<=5){
         break;
       }
@@ -210,78 +342,8 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   resetSensorsReadings();
 }
 
-void alignUnevenFront(float (*left)(boolean),float (*right)(boolean)){
-  float distL = left(true);
-  float distR = right(true);
-  int blkL = distL/10;
-  int blkR = distR/10;
-  float diff = (distL - (blkL*10)) - (distR - (blkR*10));
-  //rotation
-   while(1){
-    if(diff>0.4){
-      md.setSpeeds(0,-100);  
-      delay(100);
-      md.setSpeeds(0, 0);
-      delay(50);
-      distL = left(true);
-      distR = right(true);
-      if ((distL - blkL*10)>10||(distR-blkR*10)>10){
-        md.setSpeeds(0,100);
-        delay(100);
-        md.setSpeeds(0,0);
-        delay(5);
-        break;
-      }
-    }
-    else if(diff<-0.4){
-      md.setSpeeds(-100,0);
-      delay(100);
-      md.setSpeeds(0,0);
-      delay(50);
-      distL = left(true);
-      distR = right(true);
-      if ((distL - blkL*10)>10||(distR-blkR*10)>10){
-        md.setSpeeds(100, 0);
-        delay(100);
-        md.setSpeeds(0,0);
-        delay(5);
-        break;
-      }
-    }
-    else{
-      md.setSpeeds(0,0);
-      md.setBrakes(400,400);
-      delay(5);
-      break;
-    }
-    diff = (distL-blkL*10)-(distR-blkR*10);
-   }
-  float average = ((distL-blkL*10) + (distR-blkR*10))/2;
-  if(average<=4.6){
-    while(1){
-       average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
-      if(average>=4.8){
-        break;
-      }
-      moveBackward(99);  
-    }
-  }else if(average>=5.4){
-      while(1){
-      average = ((left(true)-(blkL*10)) + (right(true)-(blkR*10)))/2;
-      if(average<=5.2){
-        break;
-      }
-      moveForward(99);
-    }
-  }
-   
-  //get new raw sensors readings
-  resetSensorsReadings();
-}
 
 void wallAlign(float (*left)(boolean),float (*right)(boolean)){
-  resetLeftAlignCounter();
-
   rotateLeft(2);
   alignFront(left, right);
   rotateRight(2);
@@ -305,8 +367,8 @@ void resetSensorsReadings() {
 float sensorone(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR1reading<0) {
-//      SharpIR1.distance() ; //flush sensors
-      prevIR1reading = SharpIR1.distance()-0.5;
+      if (useRaw){SharpIR1.distance() ;} //flush sensors
+      prevIR1reading = SharpIR1.distance();//-0.5
   }
   
   return prevIR1reading;
@@ -315,7 +377,7 @@ float sensorone(boolean useRaw){
 float sensortwo(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR2reading<0) {
-//      SharpIR2.distance() ; //flush sensors
+      if (useRaw){SharpIR2.distance() ;} //flush sensors
       prevIR2reading = SharpIR2.distance();
   }
   
@@ -325,7 +387,7 @@ float sensortwo(boolean useRaw){
 float sensorthree(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR3reading<0) {
-//      SharpIR3.distance() ; //flush sensors
+      if (useRaw){SharpIR3.distance() ;} //flush sensors
       prevIR3reading = SharpIR3.distance();
   }
   
@@ -335,8 +397,8 @@ float sensorthree(boolean useRaw){
 float sensorfour(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR4reading<0) {
-//      SharpIR4.distance() ; //flush sensors
-      prevIR4reading = SharpIR4.distance()+0.2;
+      if (useRaw){SharpIR4.distance() ;} //flush sensors
+      prevIR4reading = SharpIR4.distance();
   }
   
   return prevIR4reading;
@@ -345,7 +407,7 @@ float sensorfour(boolean useRaw){
 float sensorfive(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR5reading<0) {
-//      SharpIR5.distance() ; //flush sensors
+      if (useRaw){SharpIR5.distance() ;} //flush sensors
       prevIR5reading = SharpIR5.distance() ;
   }
   
@@ -375,7 +437,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTL = sensorfive(false); // this returns the distance for Left Top Left
+    disLTL = sensorfive(true); // this returns the distance for Left Top Left
     blkLTL = leftCal(disLTL);
   } else {
     disLTL = -1;
@@ -383,7 +445,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disLTR = sensorfour(false); // this returns the distance for Left Top Right
+    disLTR = sensorfour(true); // this returns the distance for Left Top Right
     blkLTR = leftCal(disLTR);
   } else {
     disLTR = -1;
@@ -391,7 +453,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFR = sensorthree(false); // this returns the distance for Front Right
+    disFR = sensorthree(true); // this returns the distance for Front Right
     blkFR = frontCal(disFR);
   } else {
     blkFR = -1;
@@ -399,7 +461,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFL = sensortwo(false); // this returns the distance for Front Left
+    disFL = sensortwo(true); // this returns the distance for Front Left
     blkFL = frontCal(disFL);
   } else {
     disFL = -1;
@@ -407,7 +469,7 @@ void sensorReading(long Sensor) {
   }
   Sensor /= 10;
   if (Sensor % 10 == 1) {
-    disFM = sensorone(false); // this returns the distance for Front Middle
+    disFM = sensorone(true); // this returns the distance for Front Middle
     blkFM = frontMidCal(disFM);
   } else {
     disFM = -1;
@@ -444,6 +506,10 @@ void sensorReading(long Sensor) {
 
 
 }
+
+
+
+
 void rightSensorReading(){
   String blocks = "";
   int disRM=SharpIR6.distance();  // this returns the distance for Left Top Left
