@@ -168,99 +168,71 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
   
-  while(left(true)<5.5 || right(true)<5.5){
-    md.setSpeeds(-200,-200);
-    delay(50);
-    md.setSpeeds(0,0);
-  }
-  float diff = left(false) - right(false);
+  // while(left(true)<5.5 || right(true)<5.5){
+    // md.setSpeeds(-200,-200);
+    // delay(50);
+    // md.setSpeeds(0,0);
+  // }
 
-
-  float average = (left(true) + right(true))/2;
-  if(average<=4.8){
-    while(1){
-
-      moveBackward(99);  
-
-      resetSensorsReadings();
-      
-      near = ((left(false) + right(false))/2);
-      if(left(false)>10||right(false)>10){
-         break;
-      }
-      if(near>=4.9){
-        break;
-      }
-
-    }
-  }else if(average>=5.2){
-      while(1){
-
-      moveForward(99);
-
-      resetSensorsReadings();
-      
-      near = ((left(false) + right(false))/2);
-      if(left(false)>10||right(false)>10){
-         break;
-      }
-      if(near<=5){
-        break;
-      }
-    }
-  }
-   
-  //get new raw sensors readings
-  resetSensorsReadings();
+  alignRotate();
+  aligndisplacement();
+  
 }
 
 void alignRotate() {
     int counter = 0;
+    boolean lastrotateleft; 
+    resetSensorsReadings();
     
-    while(left(false) == right(false) || counter<30) {
-      if(diff>0){
-          aligned = left(false) - right(false); //changed this from false to true
-          if(aligned<=0.2){
-            break;
-          }
-          md.setSpeeds(-150,0);  
-
-
-          
-          
-          // if(left(false)>10||right(false)>10){
-             // break;
-          // }
-    }
-    else {
-
-
-          aligned = left(false) - right(false);//changed this from false to true
-          if(aligned>=-0.2){
-            break;
-          }  
-          md.setSpeeds(150,0);  
-
-
-          
-          if(left(false)>10||right(false)>10){
-             break;
-          }
-
+    while(left(false) != right(false) || counter<15) {
+        diff = left(false) - right(false);
         
+        if (left(false)>10||right(false)>10){
+            if (lastrotateleft != NULL) {
+                if (lastrotateleft){
+                    //rotate right, reverse direction
+                    md.setSpeeds(-250,250);  
+                    lastrotateleft = false;
+                } else {
+                    md.setSpeeds(250,-250);  
+                    lastrotateleft = true;
+                }
+            }
+        } else if(diff>0){
+              md.setSpeeds(-250,250);  
+              lastrotateleft = false;
         }
+        else { 
+              md.setSpeeds(250,250);  
+              lastrotateleft = true;
+
+            }
         resetSensorsReadings();
         counter++;
           
     }
     md.setSpeeds(0, 0);
     md.setBrakes(400, 400);
-    
-    
 }
 
 void aligndisplacement() {
-    
+  int counter = 0;
+  float average = (left(false) + right(false))/2;
+  resetSensorsReadings();
+  
+  while(average<=4.8 ||average>= 5.2 || counter<15 ) {
+    if(average<=4.8){
+        //backward
+        md.setSpeeds(-250,-250); 
+
+    } else if (average>=5.2) {
+        //forward
+        md.setSpeeds(250,-250); 
+    }
+    resetSensorsReadings();
+    counter++;
+  }
+   resetSensorsReadings(); 
 }
 
 void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
