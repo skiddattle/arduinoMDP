@@ -45,6 +45,12 @@ void setupPID() {
 //
 void moveForward(int blockstomove) {
     //inch wise movement
+    resetSensorsReadings();
+    if(sensorone(false)||sensortwo(false)||sensorthree(false)){
+      error();
+      return;
+    }
+    
     if (blockstomove == 99) {
         moveForwardwCalibration(99);
         return;
