@@ -167,34 +167,46 @@ void alignLeft(){
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
   float aligned;
-  float diff = left(true) - right(true);
+  
+  while(left(true)<5.5 || right(true)<5.5){
+    md.setSpeeds(-200,-200);
+    delay(50);
+    md.setSpeeds(0,0);
+  }
+  float diff = left(false) - right(false);
 
 
   float average = (left(true) + right(true))/2;
   if(average<=4.8){
     while(1){
-       near = ((left(true) + right(true))/2);
+
+      moveBackward(99);  
+
+      resetSensorsReadings();
+      
+      near = ((left(false) + right(false))/2);
       if(left(false)>10||right(false)>10){
          break;
       }
       if(near>=4.9){
         break;
       }
-      moveBackward(99);  
-
 
     }
   }else if(average>=5.2){
       while(1){
-      near = ((left(true) + right(true))/2);
+
+      moveForward(99);
+
+      resetSensorsReadings();
+      
+      near = ((left(false) + right(false))/2);
       if(left(false)>10||right(false)>10){
          break;
       }
       if(near<=5){
         break;
       }
-      moveForward(99);
-
     }
   }
    
@@ -353,7 +365,7 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
 }
 
 
-void wallAlign(void (*left)(boolean),void (*right)(boolean)){
+void wallAlign(float (*left)(boolean),float (*right)(boolean)){
   rotateLeft(2);
   alignFront(left, right);
   rotateRight(2);
@@ -377,8 +389,8 @@ void resetSensorsReadings() {
 float sensorone(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR1reading<0) {
-//      SharpIR1.distance() ; //flush sensors
-      prevIR1reading = SharpIR1.distance()-0.5;
+      if (useRaw){SharpIR1.distance() ;} //flush sensors
+      prevIR1reading = SharpIR1.distance();//-0.5
   }
   
   return prevIR1reading;
@@ -387,7 +399,7 @@ float sensorone(boolean useRaw){
 float sensortwo(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR2reading<0) {
-//      SharpIR2.distance() ; //flush sensors
+      if (useRaw){SharpIR2.distance() ;} //flush sensors
       prevIR2reading = SharpIR2.distance();
   }
   
@@ -397,7 +409,7 @@ float sensortwo(boolean useRaw){
 float sensorthree(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR3reading<0) {
-//      SharpIR3.distance() ; //flush sensors
+      if (useRaw){SharpIR3.distance() ;} //flush sensors
       prevIR3reading = SharpIR3.distance();
   }
   
@@ -407,8 +419,8 @@ float sensorthree(boolean useRaw){
 float sensorfour(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR4reading<0) {
-//      SharpIR4.distance() ; //flush sensors
-      prevIR4reading = SharpIR4.distance()+0.2;
+      if (useRaw){SharpIR4.distance() ;} //flush sensors
+      prevIR4reading = SharpIR4.distance();
   }
   
   return prevIR4reading;
@@ -417,7 +429,7 @@ float sensorfour(boolean useRaw){
 float sensorfive(boolean useRaw){
   //if less than 0, it means get new sensor reading. 
   if (useRaw || prevIR5reading<0) {
-//      SharpIR5.distance() ; //flush sensors
+      if (useRaw){SharpIR5.distance() ;} //flush sensors
       prevIR5reading = SharpIR5.distance() ;
   }
   
