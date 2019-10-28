@@ -163,6 +163,63 @@ void alignLeft(){
     
 }
 
+void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
+     resetSensorsReadings();
+     while ((left(false) < 8.70 || left(false) > 8.78) || (right(false) < 8.75 || right(false) > 8.83)){
+      if (left(false) > 8.78) {
+      md.setM2Speed(300);
+      delay(6);
+      md.setM2Brake(350);
+      delay(15);
+      } else if (left(false) < 8.70) {
+        md.setM2Speed(-300);
+        delay(6);
+        md.setM2Brake(350);
+        delay(15);
+      } 
+    
+    //right side
+    if (right(false) > 8.83) {
+      md.setM1Speed(300);
+      delay(6);
+      md.setM1Brake(350);
+      delay(15);
+      } else if (right(false) < 8.75) {
+        md.setM1Speed(-300);
+        delay(6);
+        md.setM1Brake(350);
+        delay(15);
+      }
+        resetSensorsReadings();
+     }
+
+    //displacement align
+    int counter = 0;
+    float average = (left(false) + right(false))/2;
+    resetSensorsReadings();
+    
+    while(average<=4.8 ||average>= 5.2 || counter<15 ) {
+      if(average<=4.8){
+          //backward
+          md.setSpeeds(-300,-300);
+          delay(10);
+          md.setBrakes(350,350);
+          delay(15);
+  
+      } else if (average>=5.2) {
+          //forward
+          md.setSpeeds(300,300);
+          delay(10);
+          md.setBrakes(350,350);
+          delay(15);
+      }
+      resetSensorsReadings();
+      counter++;
+    }
+     resetSensorsReadings(); 
+
+     initializeMotor_End(); //add this for consistency with all movements
+}
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
@@ -174,13 +231,14 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
     // md.setSpeeds(0,0);
   // }
 
-  alignRotate();
-  aligndisplacement();
+  alignRotate(left,right);
+  aligndisplacement(left,right);
   
 }
 
-void alignRotate() {
+void alignRotate(float (*left)(boolean),float (*right)(boolean)) {
     int counter = 0;
+    float diff;
     boolean lastrotateleft; 
     resetSensorsReadings();
     
@@ -215,7 +273,7 @@ void alignRotate() {
     md.setBrakes(400, 400);
 }
 
-void aligndisplacement() {
+void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
   int counter = 0;
   float average = (left(false) + right(false))/2;
   resetSensorsReadings();
