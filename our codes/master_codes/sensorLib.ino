@@ -1,3 +1,12 @@
+int sensorOneUsed = -1;
+int sensorTwoUsed = -1;
+int sensorThreeUsed = -1;
+float leftlowerthreshold;
+float leftupperthreshold;
+float rightlowerthreshold;
+float rightupperthreshold;
+float distawaylowerthreshold;
+float distawayupperthreshold;
 /* ========================= Alignment + SensorLIB =======================================*/
 void checkLeftAlign() {
     boolean align;
@@ -74,14 +83,20 @@ void checkFrontAlign() {
     //check left and right, 2 and 3
     if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
         alignFront(&sensortwo, &sensorthree);
+        sensorTwoUsed = 1;
+        sensorThreeUsed =1;
         resetFrontAlignCounter();
-    } //else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
-//        alignFront(&sensortwo, &sensorone);                                 //order matters
-//        resetFrontAlignCounter();
-//    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
-//        alignFront(&sensorone, &sensorthree);
-//        resetFrontAlignCounter();
-//    }
+    } else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
+        alignFront(&sensortwo, &sensorone);                                 //order matters
+        sensorOneUsed = 1;
+        sensorTwoUsed = 1;
+        resetFrontAlignCounter();
+    } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
+        alignFront(&sensorone, &sensorthree);
+        sensorOneUsed = 1;
+        sensorThreeUsed =1;
+        resetFrontAlignCounter();
+    }
     
 //    //desperation! use staircase align
 //    else if (align && sensortwo(false)<=10) {
@@ -163,6 +178,91 @@ void alignLeft(){
     
 }
 
+void setSensorThresholds(){
+  if(sensorOneUsed&&sensorTwoUsed){
+       leftlowerthreshold = 8.70;
+       leftupperthreshold = 8.78;
+       rightlowerthreshold = 8.75;
+       rightupperthreshold = 8.83;
+       distawaylowerthreshold = 4.8;
+       distawayupperthreshold = 5.2;
+  }
+  else if(sensorThreeUsed&&sensorTwoUsed){
+       leftlowerthreshold = 8.70;
+       leftupperthreshold = 8.78;
+       rightlowerthreshold = 8.75;
+       rightupperthreshold = 8.83;
+       distawaylowerthreshold = 4.8;
+       distawayupperthreshold = 5.2;
+  }
+  else if(sensorOneUsed&&sensorThreeUsed){
+       leftlowerthreshold = 8.70;
+       leftupperthreshold = 8.78;
+       rightlowerthreshold = 8.75;
+       rightupperthreshold = 8.83;
+       distawaylowerthreshold = 4.8;
+       distawayupperthreshold = 5.2;
+  }
+  
+}
+void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
+     setSensorThresholds();
+     resetSensorsReadings();
+     while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold) || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)){
+      if (left(false) > 8.78) {
+      md.setM2Speed(300);
+      delay(6);
+      md.setM2Brake(350);
+      delay(15);
+      } else if (left(false) < 8.70) {
+        md.setM2Speed(-300);
+        delay(6);
+        md.setM2Brake(350);
+        delay(15);
+      } 
+    
+    //right side
+    if (right(false) > 8.83) {
+      md.setM1Speed(300);
+      delay(6);
+      md.setM1Brake(350);
+      delay(15);
+      } else if (right(false) < 8.75) {
+        md.setM1Speed(-300);
+        delay(6);
+        md.setM1Brake(350);
+        delay(15);
+      }
+        resetSensorsReadings();
+     }
+
+    //displacement align
+    int counter = 0;
+    float average = (left(false) + right(false))/2;
+    resetSensorsReadings();
+    
+    while(average<=distawaylowerthreshold ||average>= distawayupperthreshold || counter<15 ) {
+      if(average<=4.8){
+          //backward
+          md.setSpeeds(-300,-300);
+          delay(10);
+          md.setBrakes(350,350);
+          delay(15);
+  
+      } else if (average>=5.2) {
+          //forward
+          md.setSpeeds(300,300);
+          delay(10);
+          md.setBrakes(350,350);
+          delay(15);
+      }
+      resetSensorsReadings();
+      counter++;
+    }
+     resetSensorsReadings(); 
+     resetSensorsUsed();
+     initializeMotor_End(); //add this for consistency with all movements
+}
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
   float near;
@@ -174,13 +274,14 @@ void alignFront(float (*left)(boolean),float (*right)(boolean)){
     // md.setSpeeds(0,0);
   // }
 
-  alignRotate();
-  aligndisplacement();
+  alignRotate(left,right);
+  aligndisplacement(left,right);
   
 }
 
-void alignRotate() {
+void alignRotate(float (*left)(boolean),float (*right)(boolean)) {
     int counter = 0;
+    float diff;
     boolean lastrotateleft; 
     resetSensorsReadings();
     
@@ -215,7 +316,7 @@ void alignRotate() {
     md.setBrakes(400, 400);
 }
 
-void aligndisplacement() {
+void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
   int counter = 0;
   float average = (left(false) + right(false))/2;
   resetSensorsReadings();
@@ -613,4 +714,10 @@ int leftCal(int receiveDFL) {
     //sentBFR = 3;
   }
   return sentBFR;
+}
+
+void resetSensorsUsed(){
+    int sensorOneUsed = -1;
+    int sensorTwoUsed = -1;
+    int sensorThreeUsed = -1;
 }
