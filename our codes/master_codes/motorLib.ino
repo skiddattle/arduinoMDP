@@ -68,7 +68,7 @@ void moveForwardwCalibration(int blockstomove) {
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 550;//275
+          tickstomove = 560;//275
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
           md.setSpeeds(currentSpeed-6,currentSpeed);
         }
@@ -340,7 +340,7 @@ void rotateLeft(int degreetomove) {
     tickstomove = 105; //45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 770;//782 //90 degrees
+    tickstomove = 775;//782 //90 degrees
   }
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees

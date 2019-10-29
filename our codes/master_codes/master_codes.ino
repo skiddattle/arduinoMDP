@@ -63,6 +63,11 @@ boolean middleLeftisBlock = false;
 int alignThreshold = 5;     //4
 int forwardThreshold = 5;   //threshold for wallAlign only, increment only if going forward. reset when alignment done
 
+//keep track of sensors used
+int sensorOneUsed = -1;
+int sensorTwoUsed = -1;
+int sensorThreeUsed = -1;
+
 String RPIcommand;
 
 /* ================================ SETUP() AND LOOP() ======================================*/
@@ -79,7 +84,7 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
- runTests();
+//  runTests();
   
   startListening();
 }
@@ -150,9 +155,12 @@ void runTests() {
 //  delay(1000);
 
 //              
-//  
-    delay(2000);
-    wallAlign(&sensortwo,&sensorone);
+
+//    delay(2000);
+//    sensorTwoUsed =1;
+//    sensorThreeUsed =1;
+//    wallAlign(&sensortwo, &sensorthree);                    //left and right
+
 //    rotateLeft(2);
 //    delay(1000);
 //    rotateLeft(2);
@@ -160,12 +168,22 @@ void runTests() {
 //    rotateLeft(2);
 //    delay(1000);
 //    rotateLeft(2);
-//  int  test = 4;
-//  while(test>0){
-//    moveForward(1);//comment out
-//    delay(1500);
-//    test--;
-//  }
+//  delay(2000);
+//   rotateRight(2);
+//   delay(1000);
+//  rotateRight(2);
+//     delay(1000);
+//   rotateRight(2);   
+//      delay(1000);
+//  rotateRight(2);
+//    
+  delay(2000);        
+  int  test = 4;
+  while(test>0){
+    moveForward(1);//comment out
+    delay(1500);
+    test--;
+  }
 //  rotateLeft(2);
 //  delay(1500);
 //  test = 4;
@@ -174,7 +192,7 @@ void runTests() {
 //    delay(1500);
 //    test--;
 //  }
-//  
+  
 //  rotateLeft(2);
 //  test = 4;
 //  while(test>0){

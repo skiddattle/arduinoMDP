@@ -1,6 +1,4 @@
-int sensorOneUsed = -1;
-int sensorTwoUsed = -1;
-int sensorThreeUsed = -1;
+
 float leftlowerthreshold;
 float leftupperthreshold;
 float rightlowerthreshold;
@@ -32,12 +30,16 @@ void checkLeftAlign() {
     //check left left and left right, 5 and 4
     if (align && sensorfive(false)<=10 && sensorfour(true)<=10) {
         wallAlign(&sensortwo, &sensorthree);                    //left and right
+        sensorTwoUsed =1;
+        sensorThreeUsed =1;
         resetLeftAlignCounter();
     }
-//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
-//        wallAlign(&sensorone, &sensorthree);                    //mid and right
-//        resetLeftAlignCounter();
-//    }
+    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
+        wallAlign(&sensorone, &sensorthree);                    //mid and right
+        sensorOneUsed = 1;
+        sensorThreeUsed =1;
+        resetLeftAlignCounter();
+    }
 //    //desperation! use staircase align
 //    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
 //        rotateLeft(2);
@@ -82,17 +84,17 @@ void checkFrontAlign() {
     }
     //check left and right, 2 and 3
     if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
-        alignFront(&sensortwo, &sensorthree);
-        sensorTwoUsed = 1;
+        fixedDistanceAlignFront(&sensortwo, &sensorthree);
+        sensorTwoUsed =1;
         sensorThreeUsed =1;
         resetFrontAlignCounter();
     } else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
-        alignFront(&sensortwo, &sensorone);                                 //order matters
+        fixedDistanceAlignFront(&sensortwo, &sensorone);                                 //order matters
         sensorOneUsed = 1;
         sensorTwoUsed = 1;
         resetFrontAlignCounter();
     } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
-        alignFront(&sensorone, &sensorthree);
+        fixedDistanceAlignFront(&sensorone, &sensorthree);
         sensorOneUsed = 1;
         sensorThreeUsed =1;
         resetFrontAlignCounter();
@@ -179,42 +181,44 @@ void alignLeft(){
 }
 
 void setSensorThresholds(){
-  if(sensorOneUsed&&sensorTwoUsed){
-       leftlowerthreshold = 8.70;
-       leftupperthreshold = 8.78;
-       rightlowerthreshold = 8.75;
-       rightupperthreshold = 8.83;
-       distawaylowerthreshold = 4.8;
-       distawayupperthreshold = 5.2;
+  if(sensorOneUsed==1&&sensorTwoUsed==1){
+       leftlowerthreshold = 5.38;
+       leftupperthreshold = 5.48;
+       rightlowerthreshold = 5.07;
+       rightupperthreshold = 5.18;
+       distawaylowerthreshold = 5.23;
+       distawayupperthreshold = 5.33;
   }
-  else if(sensorThreeUsed&&sensorTwoUsed){
-       leftlowerthreshold = 8.70;
-       leftupperthreshold = 8.78;
-       rightlowerthreshold = 8.75;
-       rightupperthreshold = 8.83;
-       distawaylowerthreshold = 4.8;
-       distawayupperthreshold = 5.2;
+  else if(sensorTwoUsed==1&&sensorThreeUsed==1){
+       leftlowerthreshold = 5.38;
+       leftupperthreshold = 5.48;
+       rightlowerthreshold = 5.25;
+       rightupperthreshold = 5.38;
+       distawaylowerthreshold = 5.32;
+       distawayupperthreshold = 5.45;
   }
-  else if(sensorOneUsed&&sensorThreeUsed){
-       leftlowerthreshold = 8.70;
-       leftupperthreshold = 8.78;
-       rightlowerthreshold = 8.75;
-       rightupperthreshold = 8.83;
-       distawaylowerthreshold = 4.8;
-       distawayupperthreshold = 5.2;
+  else if(sensorOneUsed==1&&sensorThreeUsed==1){
+       leftlowerthreshold = 5.07;
+       leftupperthreshold = 5.18;
+       rightlowerthreshold = 5.25;
+       rightupperthreshold = 5.38;
+       distawaylowerthreshold = 5.17;
+       distawayupperthreshold = 5.28;
   }
   
 }
 void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      setSensorThresholds();
      resetSensorsReadings();
-     while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold) || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)){
-      if (left(false) > 8.78) {
+     int escape =0;
+     while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold)
+            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<15){
+      if (left(false) > leftupperthreshold) {
       md.setM2Speed(300);
       delay(6);
       md.setM2Brake(350);
       delay(15);
-      } else if (left(false) < 8.70) {
+      } else if (left(false) < leftlowerthreshold) {
         md.setM2Speed(-300);
         delay(6);
         md.setM2Brake(350);
@@ -222,18 +226,19 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
       } 
     
     //right side
-    if (right(false) > 8.83) {
+    if (right(false) > rightupperthreshold) {
       md.setM1Speed(300);
       delay(6);
       md.setM1Brake(350);
       delay(15);
-      } else if (right(false) < 8.75) {
+      } else if (right(false) < rightlowerthreshold) {
         md.setM1Speed(-300);
         delay(6);
         md.setM1Brake(350);
         delay(15);
       }
         resetSensorsReadings();
+        escape++;
      }
 
     //displacement align
@@ -242,14 +247,14 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
     resetSensorsReadings();
     
     while(average<=distawaylowerthreshold ||average>= distawayupperthreshold || counter<15 ) {
-      if(average<=4.8){
+      if(average<=distawaylowerthreshold){
           //backward
           md.setSpeeds(-300,-300);
           delay(10);
           md.setBrakes(350,350);
           delay(15);
   
-      } else if (average>=5.2) {
+      } else if (average>=distawayupperthreshold) {
           //forward
           md.setSpeeds(300,300);
           delay(10);
@@ -442,7 +447,7 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
 
 void wallAlign(float (*left)(boolean),float (*right)(boolean)){
   rotateLeft(2);
-  alignFront(left, right);
+  fixedDistanceAlignFront(left,right);
   rotateRight(2);
   //alignLeft();        //removed as we are implementing 2-block alignment. If keeping, we have to check sensors are ok before alignment
 
@@ -717,7 +722,10 @@ int leftCal(int receiveDFL) {
 }
 
 void resetSensorsUsed(){
-    int sensorOneUsed = -1;
-    int sensorTwoUsed = -1;
-    int sensorThreeUsed = -1;
+    sensorOneUsed = -1;
+    sensorTwoUsed = -1;
+    sensorThreeUsed = -1;
+    Serial.print(sensorOneUsed);
+    Serial.print(sensorTwoUsed);
+    Serial.print(sensorThreeUsed);
 }
