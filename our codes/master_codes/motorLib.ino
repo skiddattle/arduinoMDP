@@ -66,11 +66,6 @@ void moveForward(int blockstomove) {
     moveForwardwCalibration(blockstomove);
 }
 void moveForwardwCalibration(int blockstomove) {
-   resetSensorsReadings();
-   if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
-      error();
-      return;
-   }
     
   double currentSpeed = 0;
   currentSpeed = MOVE_MAX_SPEED;
@@ -80,9 +75,9 @@ void moveForwardwCalibration(int blockstomove) {
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 560;//275
+          tickstomove = 555;//275
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-6,currentSpeed);
+          md.setSpeeds(currentSpeed-7,currentSpeed);
         }
         break;
       }
@@ -381,7 +376,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 767; //90 degrees
+    tickstomove = 773; //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees

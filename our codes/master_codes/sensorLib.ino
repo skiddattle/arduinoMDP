@@ -29,15 +29,17 @@ void checkLeftAlign() {
     
     //check left left and left right, 5 and 4
     if (align && sensorfive(false)<=10 && sensorfour(true)<=10) {
-        wallAlign(&sensortwo, &sensorthree);                    //left and right
+      
         sensorTwoUsed =1;
         sensorThreeUsed =1;
+        wallAlign(&sensortwo, &sensorthree);                    //left and right
         resetLeftAlignCounter();
     }
     else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
-        wallAlign(&sensorone, &sensorthree);                    //mid and right
         sensorOneUsed = 1;
         sensorThreeUsed =1;
+        wallAlign(&sensorone, &sensorthree);                    //mid and right
+
         resetLeftAlignCounter();
     }
 //    //desperation! use staircase align
@@ -84,19 +86,22 @@ void checkFrontAlign() {
     }
     //check left and right, 2 and 3
     if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
-        fixedDistanceAlignFront(&sensortwo, &sensorthree);
         sensorTwoUsed =1;
         sensorThreeUsed =1;
+        fixedDistanceAlignFront(&sensortwo, &sensorthree);
+
         resetFrontAlignCounter();
     } else if (align && sensortwo(false)<=10 && sensorone(false)<=10) {      //check left and mid, 2 and 1
-        fixedDistanceAlignFront(&sensortwo, &sensorone);                                 //order matters
         sensorOneUsed = 1;
         sensorTwoUsed = 1;
+        fixedDistanceAlignFront(&sensortwo, &sensorone);                                 //order matters
+
         resetFrontAlignCounter();
     } else if (align && sensorone(false)<=10 && sensorthree(false)<=10) {      //check mid and right, 1 and 3
-        fixedDistanceAlignFront(&sensorone, &sensorthree);
         sensorOneUsed = 1;
         sensorThreeUsed =1;
+        fixedDistanceAlignFront(&sensorone, &sensorthree);
+
         resetFrontAlignCounter();
     }
     
@@ -212,7 +217,7 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      resetSensorsReadings();
      int escape =0;
      while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold)
-            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<15){
+            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<30){
       if (left(false) > leftupperthreshold) {
       md.setM2Speed(300);
       delay(6);
@@ -241,29 +246,26 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
         escape++;
      }
 
-    //displacement align
-    int counter = 0;
-    float average = (left(false) + right(false))/2;
-    resetSensorsReadings();
-    
-    while(average<=distawaylowerthreshold ||average>= distawayupperthreshold || counter<15 ) {
-      if(average<=distawaylowerthreshold){
-          //backward
-          md.setSpeeds(-300,-300);
-          delay(10);
-          md.setBrakes(350,350);
-          delay(15);
-  
-      } else if (average>=distawayupperthreshold) {
-          //forward
-          md.setSpeeds(300,300);
-          delay(10);
-          md.setBrakes(350,350);
-          delay(15);
-      }
-      resetSensorsReadings();
-      counter++;
-    }
+//    //displacement align
+//    int counter = 0;
+//    float average = (left(false) + right(false))/2;
+//    resetSensorsReadings();
+//    
+//    while(average<=distawaylowerthreshold ||average>= distawayupperthreshold || counter<15 ) {
+//      if(average<=distawaylowerthreshold){
+//          //backward
+//          md.setSpeeds(-30,-30);
+//  
+//      } else if (average>=distawayupperthreshold) {
+//          //forward
+//          md.setSpeeds(30,30);
+//
+//      }
+//      resetSensorsReadings();
+//      average = (left(false) + right(false))/2;
+//      counter++;
+//    }
+//    md.setBrakes(350,350);
      resetSensorsReadings(); 
      resetSensorsUsed();
      initializeMotor_End(); //add this for consistency with all movements
