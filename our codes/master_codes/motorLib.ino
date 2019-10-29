@@ -46,7 +46,7 @@ void setupPID() {
 void moveForward(int blockstomove) {
     //inch wise movement
     resetSensorsReadings();
-    if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
+    if(blockstomove==1 && (sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8)){
       error();
       return;
     }
