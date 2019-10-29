@@ -376,7 +376,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 773; //90 degrees
+    tickstomove = 775; //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees

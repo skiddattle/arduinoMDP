@@ -217,30 +217,30 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      resetSensorsReadings();
      int escape =0;
      while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold)
-            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<30){
+            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<10){
       if (left(false) > leftupperthreshold) {
-      md.setM2Speed(300);
-      delay(6);
-      md.setM2Brake(350);
-      delay(15);
+      md.setM2Speed(300);//300
+      delay(15);//6
+      md.setM2Brake(350);//350
+      //delay(15);
       } else if (left(false) < leftlowerthreshold) {
         md.setM2Speed(-300);
-        delay(6);
-        md.setM2Brake(350);
         delay(15);
+        md.setM2Brake(350);
+        //delay(15);
       } 
     
     //right side
     if (right(false) > rightupperthreshold) {
       md.setM1Speed(300);
-      delay(6);
-      md.setM1Brake(350);
       delay(15);
+      md.setM1Brake(350);
+      //delay(15);
       } else if (right(false) < rightlowerthreshold) {
         md.setM1Speed(-300);
-        delay(6);
-        md.setM1Brake(350);
         delay(15);
+        md.setM1Brake(350);
+        //delay(15);
       }
         resetSensorsReadings();
         escape++;
@@ -268,7 +268,7 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
 //    md.setBrakes(350,350);
      resetSensorsReadings(); 
      resetSensorsUsed();
-     initializeMotor_End(); //add this for consistency with all movements
+//     initializeMotor_End(); //add this for consistency with all movements
 }
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
@@ -473,8 +473,8 @@ float sensorone(boolean useRaw){
   if (useRaw || prevIR1reading<0) {
       if (useRaw){
         SharpIR1.distance() ;
-        SharpIR1.distance() ;
-        SharpIR1.distance() ;
+//        SharpIR1.distance() ;
+//        SharpIR1.distance() ;
         
         } //flush sensors
       prevIR1reading = SharpIR1.distance();//-0.5
@@ -488,8 +488,8 @@ float sensortwo(boolean useRaw){
   if (useRaw || prevIR2reading<0) {
       if (useRaw){
         SharpIR2.distance() ;
-        SharpIR2.distance() ;
-        SharpIR2.distance() ;
+//        SharpIR2.distance() ;
+//        SharpIR2.distance() ;
       } //flush sensors
       prevIR2reading = SharpIR2.distance();
   }
@@ -502,8 +502,8 @@ float sensorthree(boolean useRaw){
   if (useRaw || prevIR3reading<0) {
       if (useRaw){
         SharpIR3.distance() ;
-        SharpIR3.distance() ;
-        SharpIR3.distance() ;
+//        SharpIR3.distance() ;
+//        SharpIR3.distance() ;
       } //flush sensors
       prevIR3reading = SharpIR3.distance();
   }
@@ -516,8 +516,8 @@ float sensorfour(boolean useRaw){
   if (useRaw || prevIR4reading<0) {
       if (useRaw){
         SharpIR4.distance() ;
-        SharpIR4.distance() ;
-        SharpIR4.distance() ;
+//        SharpIR4.distance() ;
+//        SharpIR4.distance() ;
       } //flush sensors
       prevIR4reading = SharpIR4.distance();
   }
@@ -530,8 +530,8 @@ float sensorfive(boolean useRaw){
   if (useRaw || prevIR5reading<0) {
       if (useRaw){
         SharpIR5.distance() ;
-        SharpIR5.distance() ;
-        SharpIR5.distance() ;
+//        SharpIR5.distance() ;
+//        SharpIR5.distance() ;
       } //flush sensors
       prevIR5reading = SharpIR5.distance() ;
   }
@@ -541,8 +541,8 @@ float sensorfive(boolean useRaw){
 
 float sensorsix(){
   SharpIR6.distance() ;
-  SharpIR6.distance() ;
-  SharpIR6.distance() ;
+//  SharpIR6.distance() ;
+//  SharpIR6.distance() ;
   return SharpIR6.distance() ;
 }
 

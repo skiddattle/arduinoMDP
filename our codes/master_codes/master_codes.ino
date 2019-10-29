@@ -160,14 +160,14 @@ void runTests() {
 //    sensorTwoUsed =1;
 //    sensorThreeUsed =1;
 //    wallAlign(&sensortwo, &sensorthree);                    //left and right
-
-//    rotateLeft(2);
+//    delay(2000);
+//    rotateRight(2);
 //    delay(1000);
-//    rotateLeft(2);
+//    rotateRight(2);
 //    delay(1000);
-//    rotateLeft(2);
+//    rotateRight(2);
 //    delay(1000);
-//    rotateLeft(2);
+//    rotateRight(2);
 //  delay(2000);
 //   rotateLeft(2);
 //   delay(1000);
@@ -177,13 +177,13 @@ void runTests() {
 //      delay(1000);
 //  rotateLeft(2);
 //    
-//  delay(2000);        
-//  int  test = 4;
-//  while(test>0){
-//    moveForward(1);//comment out
-//    delay(1500);
-//    test--;
-//  }
+  delay(2000);        
+  int  test = 4;
+  while(test>0){
+    moveForward(1);//comment out
+    delay(1500);
+    test--;
+  }
 //  rotateLeft(2);
 //  delay(1500);
 //  test = 4;
