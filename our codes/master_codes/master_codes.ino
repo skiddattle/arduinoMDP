@@ -220,3 +220,7 @@ String readStr() {
 void done() {
   Serial.println("done");
 }
+
+void error() {
+  Serial.println("pb");
+}
