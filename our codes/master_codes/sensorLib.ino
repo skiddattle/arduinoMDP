@@ -345,107 +345,48 @@ void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
 
 void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
   float flatdist = 10;
-  if (leftisNear) {
-      flatdist = flatdist * -1;         //flip flat distance to negative
-  }
-    
-  float near;
-  float aligned;
-  float diff = left(true) - right(true) - flatdist;
-
-  if(diff>0){
-      while(1){
-
-      aligned = left(false) - right(false) - flatdist; 
-      if(aligned<=0.5){
-        break;
-      }
-      
-      //HI BRYAN! FIX CALIBRATION BEFORE FIXING ;
-      md.setSpeeds(-150,0);//HI BRYAN! FIX CALIBRATION 
-      delay(50);
-      md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
-      delay(5);
-
-      resetSensorsReadings();
-      
-      if (leftisNear && left(false)>10) {
-          break;
-      }
-      else if (!leftisNear && right(false)>10) {
-          break;
-      }
-    }
-  }
-  else if(diff<0){
-
-      while(1){
-
-      aligned = left(false) - right(false) - flatdist;
-      if(aligned>=-0.5){
-        break;
-      }  
-      
-      //HI BRYAN! FIX CALIBRATION
-      md.setSpeeds(150,0);//HI BRYAN! FIX CALIBRATION
-      delay(50);
-      md.setSpeeds(0, 0);
-      md.setBrakes(400, 400);
-      delay(5);
-
-      resetSensorsReadings();
-      
-      if (leftisNear && left(false)>10) {
-          break;
-      }
-      else if (!leftisNear && right(false)>10) {
-          break;
-      }
-
-    }
-  }
-  
-  //displacement
-  float average = (left(true) + right(true) - abs(flatdist) )/2 ;
-  if(average<=4.8){
-    while(1){
-      near = ((left(true) + right(true) - abs(flatdist) )/2) ;
-      
-      if (leftisNear && left(false)>10) {
-          break;
-      }
-      else if (!leftisNear && right(false)>10) {
-          break;
-      }
-      if(near>=4.9){
-        break;
-      }
-      moveBackward(99);  
-
-
-    }
-  }else if(average>=5.2){
-      while(1){
-      near = ((left(true) + right(true) - abs(flatdist) )/2);
-      if (leftisNear && left(false)>10) {
-          break;
-      }
-      else if (!leftisNear && right(false)>10) {
-          break;
-      }
-      if(near<=5){
-        break;
-      }
-      moveForward(99);
-
-    }
-  }
-   
-  //get new raw sensors readings
   resetSensorsReadings();
+  float leftc = left(false);
+  float rightc = right(false);
+  if (leftisNear) {
+      rightc-=10;
+  } else {
+      leftc-=10;
+  }
+ setSensorThresholds();
+ int escape =0;
+ while ((leftc < leftlowerthreshold || leftc > leftupperthreshold)
+        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)||escape<15){
+  if (leftc > leftupperthreshold) {
+  md.setM2Speed(300);
+  delay(6);
+  md.setM2Brake(350);
+  delay(15);
+  } else if (leftc < leftlowerthreshold) {
+    md.setM2Speed(-300);
+    delay(6);
+    md.setM2Brake(350);
+    delay(15);
+  } 
+    
+  //right side
+  if (rightc > rightupperthreshold) {
+    md.setM1Speed(300);
+    delay(6);
+    md.setM1Brake(350);
+    delay(15);
+    } else if (rightc < rightlowerthreshold) {
+      md.setM1Speed(-300);
+      delay(6);
+      md.setM1Brake(350);
+      delay(15);
+    }
+      resetSensorsReadings();
+      leftc = left(false);
+      rightc = right(false);
+      escape++;
+  }
 }
-
 
 void wallAlign(float (*left)(boolean),float (*right)(boolean)){
   rotateLeft(2);
