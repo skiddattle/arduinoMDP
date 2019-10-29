@@ -46,7 +46,7 @@ void setupPID() {
 void moveForward(int blockstomove) {
     //inch wise movement
     resetSensorsReadings();
-    if(sensorone(false)||sensortwo(false)||sensorthree(false)){
+    if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
       error();
       return;
     }
@@ -66,6 +66,12 @@ void moveForward(int blockstomove) {
     moveForwardwCalibration(blockstomove);
 }
 void moveForwardwCalibration(int blockstomove) {
+   resetSensorsReadings();
+   if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
+      error();
+      return;
+   }
+    
   double currentSpeed = 0;
   currentSpeed = MOVE_MAX_SPEED;
   initializeTick();
