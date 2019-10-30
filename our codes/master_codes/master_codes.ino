@@ -57,7 +57,7 @@ float prevIR4reading = -1;
 float prevIR5reading = -1;
 
 //used to keep track of left blocks
-boolean middleLeftisBlock = false;
+int middleLeftisBlock = -1;
 
 /* ================================ SETTINGS ======================================*/
 int alignThreshold = 5;     //4
@@ -98,18 +98,22 @@ void startListening() {
     RPIcommand = readStr();
     DistNum = RPIcommand.substring(1).toInt();
     if (RPIcommand[0] == 'w') {
-      
+      resetSensorsReadings();
+      if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
+        error();
+      }else{
       moveForward(DistNum);
       
       checkLeftAlign();
       checkFrontAlign();
-
+      
       lastRPIcommand = 'w';
       done();
+      }
     }
     if (RPIcommand[0] == 'd') {
-      vert_counter += alignThreshold;       //this is to fix double align
-      hori_counter += alignThreshold;
+      vert_counter += alignThreshold -1;       //this is to fix double align
+      hori_counter += alignThreshold -1;
       
       checkLeftAlign();
       checkFrontAlign();
@@ -131,7 +135,7 @@ void startListening() {
       hori_counter += 1;
       
       checkFrontAlign();
-      middleLeftisBlock = false;
+      middleLeftisBlock = -1;        //this is because rotateleft does not check left align
       
       rotateLeft(DistNum);
 

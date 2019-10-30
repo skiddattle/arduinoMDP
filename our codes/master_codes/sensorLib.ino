@@ -25,17 +25,17 @@ void checkLeftAlign() {
         }
     }
 
-    
+    resetSensorsReadings();
     
     //check left left and left right, 5 and 4
-    if (align && sensorfive(false)<=10 && sensorfour(true)<=10) {
+    if (align && sensorfive(false)<=10 && sensorfour(false)<=10) {
       
         sensorTwoUsed =1;
         sensorThreeUsed =1;
         wallAlign(&sensortwo, &sensorthree);                    //left and right
         resetLeftAlignCounter();
     }
-    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=10) {       //2by2 align
+    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock == 1 && sensorfour(false)<=10) {       //2by2 align
         sensorOneUsed = 1;
         sensorThreeUsed =1;
         wallAlign(&sensorone, &sensorthree);                    //mid and right
@@ -43,13 +43,13 @@ void checkLeftAlign() {
         resetLeftAlignCounter();
     }
 //    //desperation! use staircase align
-//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfour(true)<=20) {
+//    else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock == 1 && sensorfour(false)<=20) {
 //        rotateLeft(2);
 //        alignStaircase(&sensorone, &sensorthree, true);                    //mid and right
 //        rotateRight(2);
 //
 //        resetLeftAlignCounter();
-//    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock && sensorfive(true)<=20) {
+//    } else if (align && RPIcommand[0] == 'w'  && middleLeftisBlock == 1 && sensorfive(false)<=20) {
 //        rotateLeft(2);
 //        alignStaircase(&sensortwo, &sensorone, false);                    //mid and right
 //        rotateRight(2);
@@ -59,10 +59,17 @@ void checkLeftAlign() {
     
     
     //code to keep track of left blocks
-    if (sensorfour(false)<=10) {
-        middleLeftisBlock = true;
-    } else {
-        middleLeftisBlock = false;
+    if (sensorfour(false)<=8) {
+        middleLeftisBlock = 1;
+    } 
+    
+    //else if (13<sensorfour(false) && sensorfour(false)<=17) {
+    //    middleLeftisBlock = 2;
+    //}
+    
+    
+    else {
+        middleLeftisBlock = -1;
     }
 }
 
@@ -84,6 +91,9 @@ void checkFrontAlign() {
             align = false;
         }
     }
+    
+    resetSensorsReadings();
+    
     //check left and right, 2 and 3
     if (align && sensortwo(false)<=10 && sensorthree(false)<=10) {
         sensorTwoUsed =1;
@@ -344,6 +354,12 @@ void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
 }
 
 void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
+
+    //staircase needs escape function in case of phantom blocks.
+
+
+
+
   float flatdist = 10;
   resetSensorsReadings();
   float leftc = left(false);
@@ -356,7 +372,7 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
  setSensorThresholds();
  int escape =0;
  while ((leftc < leftlowerthreshold || leftc > leftupperthreshold)
-        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)||escape<15){
+        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)&& escape<15){
   if (leftc > leftupperthreshold) {
   md.setM2Speed(300);
   delay(6);
