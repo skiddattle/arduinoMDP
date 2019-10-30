@@ -98,14 +98,18 @@ void startListening() {
     RPIcommand = readStr();
     DistNum = RPIcommand.substring(1).toInt();
     if (RPIcommand[0] == 'w') {
-      
+      resetSensorsReadings();
+      if(sensorone(false)<8||sensortwo(false)<8||sensorthree(false)<8){
+        error();
+      }else{
       moveForward(DistNum);
       
       checkLeftAlign();
       checkFrontAlign();
-
+      
       lastRPIcommand = 'w';
       done();
+      }
     }
     if (RPIcommand[0] == 'd') {
       vert_counter += alignThreshold -1;       //this is to fix double align
