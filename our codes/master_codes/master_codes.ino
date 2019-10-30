@@ -177,13 +177,13 @@ void runTests() {
 //      delay(1000);
 //  rotateLeft(2);
 //    
-  delay(2000);        
-  int  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+//  delay(2000);        
+//  int  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
 //  rotateLeft(2);
 //  delay(1500);
 //  test = 4;

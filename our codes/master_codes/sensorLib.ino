@@ -217,29 +217,29 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      resetSensorsReadings();
      int escape =0;
      while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold)
-            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)||escape<10){
+            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)&&escape<20){
       if (left(false) > leftupperthreshold) {
-      md.setM2Speed(300);//300
-      delay(15);//6
-      md.setM2Brake(350);//350
+      md.setM2Speed(400);//300
+      delay(10);//6
+      md.setM2Brake(400);//350
       //delay(15);
       } else if (left(false) < leftlowerthreshold) {
-        md.setM2Speed(-300);
-        delay(15);
-        md.setM2Brake(350);
+        md.setM2Speed(-400);
+        delay(10);
+        md.setM2Brake(400);
         //delay(15);
       } 
     
     //right side
     if (right(false) > rightupperthreshold) {
-      md.setM1Speed(300);
-      delay(15);
-      md.setM1Brake(350);
+      md.setM1Speed(400);
+      delay(10);
+      md.setM1Brake(400);
       //delay(15);
       } else if (right(false) < rightlowerthreshold) {
-        md.setM1Speed(-300);
-        delay(15);
-        md.setM1Brake(350);
+        md.setM1Speed(-400);
+        delay(10);
+        md.setM1Brake(400);
         //delay(15);
       }
         resetSensorsReadings();
