@@ -59,11 +59,16 @@ void checkLeftAlign() {
     
     
     //code to keep track of left blocks
-    if (sensorfour(false)<=10) {
+    if (sensorfour(false)<=8) {
         middleLeftisBlock = 1;
-    } else if (sensorfour(false)<=20) {
-        middleLeftisBlock = 2;
-    }else {
+    } 
+    
+    //else if (13<sensorfour(false) && sensorfour(false)<=17) {
+    //    middleLeftisBlock = 2;
+    //}
+    
+    
+    else {
         middleLeftisBlock = -1;
     }
 }
@@ -349,6 +354,12 @@ void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
 }
 
 void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
+
+    //staircase needs escape function in case of phantom blocks.
+
+
+
+
   float flatdist = 10;
   resetSensorsReadings();
   float leftc = left(false);
@@ -361,7 +372,7 @@ void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean left
  setSensorThresholds();
  int escape =0;
  while ((leftc < leftlowerthreshold || leftc > leftupperthreshold)
-        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)||escape<15){
+        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)&& escape<15){
   if (leftc > leftupperthreshold) {
   md.setM2Speed(300);
   delay(6);
