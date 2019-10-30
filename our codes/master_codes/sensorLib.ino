@@ -197,28 +197,22 @@ void alignLeft(){
 
 void setSensorThresholds(){
   if(sensorOneUsed==1&&sensorTwoUsed==1){
-       leftlowerthreshold = 5.38;
-       leftupperthreshold = 5.48;
-       rightlowerthreshold = 5.07;
-       rightupperthreshold = 5.18;
-       distawaylowerthreshold = 5.23;
-       distawayupperthreshold = 5.33;
+       leftlowerthreshold = 4.35;
+       leftupperthreshold = 4.45;
+       rightlowerthreshold = 3.75;
+       rightupperthreshold = 3.85;
   }
   else if(sensorTwoUsed==1&&sensorThreeUsed==1){
-       leftlowerthreshold = 5.38;
-       leftupperthreshold = 5.48;
-       rightlowerthreshold = 5.25;
-       rightupperthreshold = 5.38;
-       distawaylowerthreshold = 5.32;
-       distawayupperthreshold = 5.45;
+       leftlowerthreshold = 4.35;
+       leftupperthreshold = 4.45;
+       rightlowerthreshold = 4.27;
+       rightupperthreshold = 4.37;
   }
   else if(sensorOneUsed==1&&sensorThreeUsed==1){
-       leftlowerthreshold = 5.07;
-       leftupperthreshold = 5.18;
-       rightlowerthreshold = 5.25;
-       rightupperthreshold = 5.38;
-       distawaylowerthreshold = 5.17;
-       distawayupperthreshold = 5.28;
+       leftlowerthreshold = 3.75;
+       leftupperthreshold = 3.85;
+       rightlowerthreshold = 4.27;
+       rightupperthreshold = 4.37;
   }
   
 }
@@ -278,7 +272,7 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
 //    md.setBrakes(350,350);
      resetSensorsReadings(); 
      resetSensorsUsed();
-//     initializeMotor_End(); //add this for consistency with all movements
+     initializeMotor_End(); //add this for consistency with all movements
 }
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){
