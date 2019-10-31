@@ -273,6 +273,7 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      resetSensorsReadings(); 
      resetSensorsUsed();
      initializeMotor_End(); //add this for consistency with all movements
+     delay(10);
 }
 
 void alignFront(float (*left)(boolean),float (*right)(boolean)){

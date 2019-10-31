@@ -112,8 +112,8 @@ void startListening() {
       }
     }
     if (RPIcommand[0] == 'd') {
-      vert_counter += alignThreshold -1;       //this is to fix double align
-      hori_counter += alignThreshold -1;
+      vert_counter += 3;       //this is to fix double align
+      hori_counter += 3;
       
       checkLeftAlign();
       checkFrontAlign();
