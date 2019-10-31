@@ -60,7 +60,7 @@ float prevIR5reading = -1;
 int middleLeftisBlock = -1;
 
 /* ================================ SETTINGS ======================================*/
-int alignThreshold = 5;     //4
+int alignThreshold = 3;     //4
 int forwardThreshold = 5;   //threshold for wallAlign only, increment only if going forward. reset when alignment done
 
 //keep track of sensors used
@@ -145,6 +145,12 @@ void startListening() {
     if (RPIcommand[0] == 'z') {
       sensorReading(DistNum);
       lastRPIcommand = 'z';
+    }
+    if (RPIcommand[0] == 'g') {
+        sensorTwoUsed =1;
+        sensorThreeUsed =1;
+        fixedDistanceAlignFront(&sensortwo, &sensorthree);
+      lastRPIcommand = 'g';
     }
     
   }
