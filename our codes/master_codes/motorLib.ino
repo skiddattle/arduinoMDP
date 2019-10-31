@@ -55,6 +55,7 @@ void moveForward(int blockstomove) {
     
     while (blockstomove > forwardlimit){
         moveForwardwCalibration(forwardlimit);
+        delay(100);
         blockstomove = blockstomove - forwardlimit;
     }
     //final movement
@@ -70,9 +71,9 @@ void moveForwardwCalibration(int blockstomove) {
   switch (blockstomove) {
     case 1:
       {
-          tickstomove = 555;//275
+          tickstomove = 550;//275
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-7,currentSpeed);
+          md.setSpeeds(currentSpeed-7,currentSpeed); //7
         }
         break;
       }
@@ -80,7 +81,7 @@ void moveForwardwCalibration(int blockstomove) {
       {
         tickstomove = 1155;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-10,currentSpeed);
+          md.setSpeeds(currentSpeed-10,currentSpeed);//10//14
         }
         break;
       }
@@ -88,7 +89,7 @@ void moveForwardwCalibration(int blockstomove) {
       {
         tickstomove = 1760;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-10,currentSpeed);
+          md.setSpeeds(currentSpeed-10,currentSpeed);///10//15
         }
         break;
       }
@@ -96,7 +97,7 @@ void moveForwardwCalibration(int blockstomove) {
       {
         tickstomove = 2380;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-12,currentSpeed);
+          md.setSpeeds(currentSpeed-12,currentSpeed);//12//17
         }
         break;
       }
@@ -104,7 +105,7 @@ void moveForwardwCalibration(int blockstomove) {
       {
         tickstomove = 2985;
         while (tick_R <= tickstomove || tick_L <= tickstomove) {
-          md.setSpeeds(currentSpeed-12,currentSpeed);
+          md.setSpeeds(currentSpeed-12,currentSpeed);//12//18
         }
         break;
       }
@@ -342,7 +343,7 @@ void rotateLeft(int degreetomove) {
     tickstomove = 105; //45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 780;//775//782 //90 degrees
+    tickstomove = 777;//775//782 //90 degrees
   }
   else if (degreetomove == 3) {//270
     tickstomove = 720; //180 degrees
@@ -371,7 +372,7 @@ void rotateRight(int degreetomove) {
     tickstomove = 105;//45 degrees
   }
   else if (degreetomove == 2) {
-    tickstomove = 778;//775 //90 degrees
+    tickstomove = 777;//775 //90 degrees
   }
   else if (degreetomove == 3) {
     tickstomove = 720; //180 degrees

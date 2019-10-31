@@ -115,25 +115,11 @@ void checkFrontAlign() {
         resetFrontAlignCounter();
     }
     
-//    //desperation! use staircase align
-//    else if (align && sensortwo(false)<=10) {
-//        if (sensorone(false)<=20) {
-//            alignStaircase(&sensortwo, &sensorone, true);
-//        }
-//        resetFrontAlignCounter();
-//    } else if (align && sensorthree(false)<=10) {      //check left and mid, 2 and 1
-//        if (sensorone(false)<=20) {
-//            alignStaircase(&sensorone, &sensorthree, false);
-//        }
-//        resetFrontAlignCounter();
-//    } else if (align && sensorone(false)<=10) {      //check mid and right, 1 and 3
-//        if (sensortwo(false)<=20) {
-//            alignStaircase(&sensortwo, &sensorone, false);
-//        } else if (sensorthree(false)<=20) {
-//            alignStaircase(&sensorone, &sensorthree, true);
-//        }
-//        resetFrontAlignCounter();
-//    }
+    //desperation! use staircase align
+    else if (align && sensortwo(false)<=8 && sensorone(false)<=18&& sensorone(false)>=13) {
+        alignStaircase(&sensortwo, &sensorone);
+        resetFrontAlignCounter();
+    } 
 }
 
 void resetFrontAlignCounter() {
@@ -221,7 +207,7 @@ void fixedDistanceAlignFront(float (*left)(boolean),float (*right)(boolean)){
      resetSensorsReadings();
      int escape =0;
      while ((left(false) < leftlowerthreshold || left(false) > leftupperthreshold)
-            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold)&&escape<20){
+            || (right(false) < rightlowerthreshold || right(false) > rightupperthreshold) &&escape<20){
       if (left(false) > leftupperthreshold) {
       md.setM2Speed(400);//300
       delay(10);//6
@@ -348,55 +334,52 @@ void aligndisplacement(float (*left)(boolean),float (*right)(boolean)) {
    resetSensorsReadings(); 
 }
 
-void alignStaircase(float (*left)(boolean),float (*right)(boolean), boolean leftisNear){
-
-    //staircase needs escape function in case of phantom blocks.
 
 
+void alignStaircase(float (*left)(boolean),float (*right)(boolean)){
 
+  float sleftlowerthreshold =4.35;
+  float sleftupperthreshold =4.45;
+  float srightlowerthreshold=14.20;
+  float srightupperthreshold=14.40;
 
-  float flatdist = 10;
   resetSensorsReadings();
-  float leftc = left(false);
-  float rightc = right(false);
-  if (leftisNear) {
-      rightc-=10;
-  } else {
-      leftc-=10;
-  }
- setSensorThresholds();
- int escape =0;
- while ((leftc < leftlowerthreshold || leftc > leftupperthreshold)
-        || (rightc < rightlowerthreshold || rightc > rightupperthreshold)&& escape<15){
-  if (leftc > leftupperthreshold) {
-  md.setM2Speed(300);
-  delay(6);
-  md.setM2Brake(350);
-  delay(15);
-  } else if (leftc < leftlowerthreshold) {
-    md.setM2Speed(-300);
-    delay(6);
-    md.setM2Brake(350);
-    delay(15);
-  } 
-    
-  //right side
-  if (rightc > rightupperthreshold) {
-    md.setM1Speed(300);
-    delay(6);
-    md.setM1Brake(350);
-    delay(15);
-    } else if (rightc < rightlowerthreshold) {
-      md.setM1Speed(-300);
-      delay(6);
-      md.setM1Brake(350);
-      delay(15);
-    }
-      resetSensorsReadings();
-      leftc = left(false);
-      rightc = right(false);
-      escape++;
-  }
+  int escape =0;
+
+      while ((left(false) < sleftlowerthreshold || left(false) > sleftupperthreshold)
+            || (right(false) < srightlowerthreshold || right(false) > srightupperthreshold) &&escape<20){
+        if (left(false) > sleftupperthreshold) {
+            md.setM2Speed(400);//300
+            delay(10);//6
+            md.setM2Brake(400);//350
+            //delay(15);
+        } else if (left(false) < sleftlowerthreshold) {
+            md.setM2Speed(-400);
+            delay(10);
+            md.setM2Brake(400);
+            //delay(15);
+        } 
+      
+      //right side
+      if (right(false) > srightupperthreshold) {
+        md.setM1Speed(400);
+        delay(10);
+        md.setM1Brake(400);
+        //delay(15);
+        } else if (right(false) < srightlowerthreshold) {
+          md.setM1Speed(-400);
+          delay(10);
+          md.setM1Brake(400);
+          //delay(15);
+        }
+          resetSensorsReadings();
+          escape++;
+     }
+
+     resetSensorsReadings(); 
+     initializeMotor_End(); //add this for consistency with all movements
+     delay(10);
+     
 }
 
 void wallAlign(float (*left)(boolean),float (*right)(boolean)){
