@@ -84,7 +84,7 @@ boolean readSomething = false;
 
 void loop() {
   delay(2);
- // runTests();
+//  runTests();
   
   startListening();
 }
@@ -158,14 +158,14 @@ void startListening() {
 
 
 void runTests() {
-      delay(2000);
-      moveForward(5);
-      delay(500);
-      rotateLeft(2);
-      delay(500);
-      rotateLeft(2);
-      delay(500);
-      moveForward(5);
+//      delay(2000);
+//      moveForward(5);
+//      delay(500);
+//      rotateLeft(2);
+//      delay(500);
+//      rotateLeft(2);
+//      delay(500);
+//      moveForward(5);
 
 //              
 //
@@ -183,22 +183,20 @@ void runTests() {
 //    rotateRight(2);
 //    delay(1000);
 //    rotateRight(2);
-//  delay(2000);
-//   rotateLeft(2);
-//   delay(1000);
-//  rotateLeft(2);
-//     delay(1000);
-//   rotateLeft(2);   
-//      delay(1000);
-//  rotateLeft(2);
-//    
-  delay(2000);        
-  int  test = 4;
-  while(test>0){
-    moveForward(1);//comment out
-    delay(1500);
-    test--;
-  }
+  delay(2000);
+  moveForward(5);
+  delay(100);
+  rotateRight(2);
+  delay(100);
+  moveForward(5);
+    
+//  delay(2000);        
+//  int  test = 4;
+//  while(test>0){
+//    moveForward(1);//comment out
+//    delay(1500);
+//    test--;
+//  }
 //  rotateLeft(2);
 //  delay(1500);
 //  test = 4;
